@@ -1,9 +1,10 @@
 services:
   - type: web
     name: gan-dganit
-    runtime: node
-    buildCommand: npm install
-    startCommand: node server.js
-    envVars:
-      - key: NODE_ENV
-        value: production
+    runtime: static
+    staticPublishPath: ./public
+    buildCommand: echo "No build needed"
+    headers:
+      - path: /*
+        name: Content-Type
+        value: text/html; charset=utf-8
