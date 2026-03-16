@@ -825,25 +825,8 @@ let isRecording = false;
 let drawingColor = '#e91e63';
 
 // ===== TEXT TO SPEECH (with teacher recording support) =====
-function speak(text, speakKey) {
+function speakTTS(text) {
   window.speechSynthesis.cancel();
-
-  // Generate a key from the text if not provided
-  const key = speakKey || textToKey(text);
-
-  // Check for teacher recording
-  const recording = localStorage.getItem('ganTeacher_' + key);
-  if (recording) {
-    const audio = new Audio(recording);
-    const indicator = document.getElementById('speakingIndicator');
-    indicator.classList.add('active');
-    audio.onended = () => indicator.classList.remove('active');
-    audio.onerror = () => indicator.classList.remove('active');
-    audio.play();
-    return;
-  }
-
-  // Fallback to TTS
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'he-IL';
   utterance.rate = 0.85;
@@ -855,6 +838,48 @@ function speak(text, speakKey) {
   utterance.onerror = () => indicator.classList.remove('active');
 
   window.speechSynthesis.speak(utterance);
+}
+
+function speak(text, speakKey) {
+  window.speechSynthesis.cancel();
+
+  // Generate a key from the text if not provided
+  const key = speakKey || textToKey(text);
+
+  // Check for teacher recording
+  const recording = localStorage.getItem('ganTeacher_' + key);
+  if (recording) {
+    try {
+      const audio = new Audio();
+      const indicator = document.getElementById('speakingIndicator');
+
+      audio.oncanplaythrough = () => {
+        indicator.classList.add('active');
+        audio.play().catch(() => {
+          // If play fails, fall back to TTS
+          indicator.classList.remove('active');
+          speakTTS(text);
+        });
+      };
+
+      audio.onended = () => indicator.classList.remove('active');
+
+      audio.onerror = () => {
+        // Audio failed to load, fall back to TTS
+        indicator.classList.remove('active');
+        speakTTS(text);
+      };
+
+      audio.src = recording;
+    } catch (e) {
+      // Any error, fall back to TTS
+      speakTTS(text);
+    }
+    return;
+  }
+
+  // No recording, use TTS
+  speakTTS(text);
 }
 
 function textToKey(text) {
@@ -974,24 +999,51 @@ async function teacherRecord(key) {
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    teacherRecorder = new MediaRecorder(stream);
+
+    // Find supported MIME type
+    const mimeTypes = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg', 'audio/wav', ''];
+    let mimeType = '';
+    for (const mt of mimeTypes) {
+      if (mt === '' || MediaRecorder.isTypeSupported(mt)) {
+        mimeType = mt;
+        break;
+      }
+    }
+
+    const options = mimeType ? { mimeType } : {};
+    teacherRecorder = new MediaRecorder(stream, options);
     teacherChunks = [];
     teacherRecordingKey = key;
 
-    teacherRecorder.ondataavailable = (e) => teacherChunks.push(e.data);
+    teacherRecorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) {
+        teacherChunks.push(e.data);
+      }
+    };
+
     teacherRecorder.onstop = () => {
-      const blob = new Blob(teacherChunks, { type: 'audio/webm' });
+      stream.getTracks().forEach(t => t.stop());
+      if (teacherChunks.length === 0) {
+        alert('ההקלטה לא נשמרה, נסי שוב');
+        openTeacherPanel();
+        return;
+      }
+      const blobType = mimeType || teacherRecorder.mimeType || 'audio/webm';
+      const blob = new Blob(teacherChunks, { type: blobType });
       const reader = new FileReader();
       reader.onloadend = () => {
-        localStorage.setItem('ganTeacher_' + key, reader.result);
-        stream.getTracks().forEach(t => t.stop());
+        try {
+          localStorage.setItem('ganTeacher_' + key, reader.result);
+        } catch (e) {
+          alert('אין מספיק מקום לשמור. נסי למחוק הקלטות ישנות.');
+        }
         // Refresh panel
         openTeacherPanel();
       };
       reader.readAsDataURL(blob);
     };
 
-    teacherRecorder.start();
+    teacherRecorder.start(100); // collect data every 100ms
     btn.classList.add('recording');
     btn.textContent = '⏹️';
   } catch (err) {
@@ -1002,8 +1054,9 @@ async function teacherRecord(key) {
 function teacherPlay(key) {
   const data = localStorage.getItem('ganTeacher_' + key);
   if (data) {
-    const audio = new Audio(data);
-    audio.play();
+    const audio = new Audio();
+    audio.src = data;
+    audio.play().catch(() => alert('לא הצלחתי להשמיע'));
   }
 }
 
