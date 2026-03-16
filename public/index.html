@@ -493,6 +493,121 @@
     }
 
     .speaking-indicator.active { display: block; }
+
+    /* ===== TEACHER MODE ===== */
+    #teacher-panel {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #f5f5f5;
+      z-index: 200;
+      overflow-y: auto;
+      direction: rtl;
+    }
+
+    .teacher-header {
+      background: linear-gradient(135deg, #5c6bc0, #3949ab);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    .teacher-header h2 { font-size: 1.2em; }
+
+    .teacher-close-btn {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    .teacher-body {
+      padding: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .teacher-section {
+      background: white;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .teacher-section h3 {
+      color: #3949ab;
+      font-size: 1em;
+      margin-bottom: 10px;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    .teacher-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    .teacher-item:last-child { border-bottom: none; }
+
+    .teacher-item .item-text {
+      flex: 1;
+      font-size: 0.85em;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .teacher-item .item-key {
+      font-size: 0.7em;
+      color: #999;
+      display: block;
+    }
+
+    .teacher-rec-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.1em;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .teacher-rec-btn.rec { background: #f44336; color: white; }
+    .teacher-rec-btn.rec.recording { animation: pulse-red 1s infinite; }
+    .teacher-rec-btn.play { background: #4caf50; color: white; }
+    .teacher-rec-btn.del { background: #eee; color: #999; font-size: 0.9em; }
+
+    .teacher-item .has-recording {
+      color: #4caf50;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+
+    .teacher-info {
+      background: #e8eaf6;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 0.85em;
+      color: #3949ab;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -500,14 +615,23 @@
   <!-- SPEAKING INDICATOR -->
   <div class="speaking-indicator" id="speakingIndicator">🔊</div>
 
-  <div class="header">🌻🏠💛</div>
+  <!-- TEACHER PANEL -->
+  <div id="teacher-panel">
+    <div class="teacher-header">
+      <h2>🎙️ הקלטות הגננת</h2>
+      <button class="teacher-close-btn" onclick="closeTeacherPanel()">✕</button>
+    </div>
+    <div class="teacher-body" id="teacherBody"></div>
+  </div>
+
+  <div class="header" id="mainHeader">🌻🏠💛</div>
 
   <div class="container">
 
     <!-- ===== DAYS PAGE ===== -->
     <div id="days-page">
       <div class="speak-hint">
-        <button class="speak-btn" onclick="speak('שלום ילדים יקרים! איזה יום היום? בואו נמצא את היום שלנו!')">🔊</button>
+        <button class="speak-btn" onclick="speak('שלום ילדים יקרים! איזה יום היום? בואו נמצא את היום שלנו!', 'greeting')">🔊</button>
       </div>
 
       <div class="days-grid" id="daysGrid"></div>
@@ -700,9 +824,26 @@ let recordedAudioURL = null;
 let isRecording = false;
 let drawingColor = '#e91e63';
 
-// ===== TEXT TO SPEECH =====
-function speak(text) {
+// ===== TEXT TO SPEECH (with teacher recording support) =====
+function speak(text, speakKey) {
   window.speechSynthesis.cancel();
+
+  // Generate a key from the text if not provided
+  const key = speakKey || textToKey(text);
+
+  // Check for teacher recording
+  const recording = localStorage.getItem('ganTeacher_' + key);
+  if (recording) {
+    const audio = new Audio(recording);
+    const indicator = document.getElementById('speakingIndicator');
+    indicator.classList.add('active');
+    audio.onended = () => indicator.classList.remove('active');
+    audio.onerror = () => indicator.classList.remove('active');
+    audio.play();
+    return;
+  }
+
+  // Fallback to TTS
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'he-IL';
   utterance.rate = 0.85;
@@ -714,6 +855,168 @@ function speak(text) {
   utterance.onerror = () => indicator.classList.remove('active');
 
   window.speechSynthesis.speak(utterance);
+}
+
+function textToKey(text) {
+  return text.substring(0, 40).replace(/[^א-תa-z0-9]/gi, '_');
+}
+
+// ===== TEACHER MODE =====
+let headerTapCount = 0;
+let headerTapTimer = null;
+let teacherRecorder = null;
+let teacherChunks = [];
+let teacherRecordingKey = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('mainHeader').addEventListener('click', () => {
+    headerTapCount++;
+    clearTimeout(headerTapTimer);
+    headerTapTimer = setTimeout(() => { headerTapCount = 0; }, 2000);
+    if (headerTapCount >= 5) {
+      headerTapCount = 0;
+      openTeacherPanel();
+    }
+  });
+});
+
+function openTeacherPanel() {
+  const body = document.getElementById('teacherBody');
+  let html = `
+    <div class="teacher-info">
+      שלום! כאן אפשר להקליט את הקול שלך לכל הודעה באתר.<br>
+      הילדים ישמעו אותך במקום את הקול הממוחשב.<br>
+      🔴 לחצי להקלטה &nbsp; 🟢 לחצי לשמוע &nbsp; 🗑️ למחיקה
+    </div>
+  `;
+
+  // Greeting
+  html += buildTeacherSection('ברכת פתיחה', [
+    { key: 'greeting', text: 'שלום ילדים יקרים! איזה יום היום? בואו נמצא את היום שלנו!' }
+  ]);
+
+  // Encouragements per day
+  DAYS.forEach((day, i) => {
+    const items = [
+      { key: `enc_${i}`, text: ENCOURAGEMENTS[i] },
+      { key: `enc_full_${i}`, text: ENCOURAGEMENTS[i] + ' יש לנו משימה, שיר, ואפשר גם לשלוח משהו יפה לחברים מהגן!' }
+    ];
+
+    // Task
+    const task = DAILY_TASKS[i];
+    items.push({ key: `task_title_${i}`, text: task.spokenTitle });
+    task.steps.forEach((step, si) => {
+      items.push({ key: `task_step_${i}_${si}`, text: step.speak });
+    });
+
+    // Song
+    items.push({ key: `song_${i}`, text: DAILY_SONGS[i].spoken });
+
+    html += buildTeacherSection(DAY_EMOJIS[i] + ' ' + day, items);
+  });
+
+  // Contact
+  html += buildTeacherSection('💌 שומרים על קשר', [
+    { key: 'contact_intro', text: 'מתגעגעים לחברים? בואו נשלח להם משהו יפה! אפשר להקליט, לצלם, או לצייר!' },
+    { key: 'contact_record', text: 'לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!' },
+    { key: 'contact_photo', text: 'לחצו על המצלמה וצלמו תמונה יפה!' },
+    { key: 'contact_draw', text: 'בחרו צבע וציירו ציור יפה לחברים!' },
+    { key: 'contact_recording_start', text: 'מקליטים! בואו נדבר!' },
+    { key: 'contact_mic_error', text: 'צריך לאשר את המיקרופון, בקשו מאמא או אבא לעזור' },
+    { key: 'success', text: 'איזה יופי! כל הכבוד!' },
+    { key: 'clear_canvas', text: 'מחקנו! אפשר להתחיל ציור חדש!' }
+  ]);
+
+  body.innerHTML = html;
+  document.getElementById('teacher-panel').style.display = 'block';
+}
+
+function buildTeacherSection(title, items) {
+  let html = `<div class="teacher-section"><h3>${title}</h3>`;
+  items.forEach(item => {
+    const hasRec = localStorage.getItem('ganTeacher_' + item.key) ? true : false;
+    html += `
+      <div class="teacher-item">
+        <div class="item-text">
+          ${item.text}
+          ${hasRec ? '<span class="has-recording">✓ יש הקלטה</span>' : ''}
+        </div>
+        <button class="teacher-rec-btn rec" id="trec_${item.key}" onclick="teacherRecord('${item.key}')">🎤</button>
+        ${hasRec ? `
+          <button class="teacher-rec-btn play" onclick="teacherPlay('${item.key}')">▶️</button>
+          <button class="teacher-rec-btn del" onclick="teacherDelete('${item.key}')">🗑️</button>
+        ` : ''}
+      </div>
+    `;
+  });
+  html += '</div>';
+  return html;
+}
+
+async function teacherRecord(key) {
+  const btn = document.getElementById('trec_' + key);
+
+  if (teacherRecordingKey === key) {
+    // Stop recording
+    teacherRecorder.stop();
+    teacherRecordingKey = null;
+    btn.classList.remove('recording');
+    btn.textContent = '🎤';
+    return;
+  }
+
+  // Stop any other recording
+  if (teacherRecorder && teacherRecorder.state === 'recording') {
+    teacherRecorder.stop();
+    const prevBtn = document.getElementById('trec_' + teacherRecordingKey);
+    if (prevBtn) { prevBtn.classList.remove('recording'); prevBtn.textContent = '🎤'; }
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    teacherRecorder = new MediaRecorder(stream);
+    teacherChunks = [];
+    teacherRecordingKey = key;
+
+    teacherRecorder.ondataavailable = (e) => teacherChunks.push(e.data);
+    teacherRecorder.onstop = () => {
+      const blob = new Blob(teacherChunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        localStorage.setItem('ganTeacher_' + key, reader.result);
+        stream.getTracks().forEach(t => t.stop());
+        // Refresh panel
+        openTeacherPanel();
+      };
+      reader.readAsDataURL(blob);
+    };
+
+    teacherRecorder.start();
+    btn.classList.add('recording');
+    btn.textContent = '⏹️';
+  } catch (err) {
+    alert('לא הצלחתי לגשת למיקרופון');
+  }
+}
+
+function teacherPlay(key) {
+  const data = localStorage.getItem('ganTeacher_' + key);
+  if (data) {
+    const audio = new Audio(data);
+    audio.play();
+  }
+}
+
+function teacherDelete(key) {
+  localStorage.removeItem('ganTeacher_' + key);
+  openTeacherPanel();
+}
+
+function closeTeacherPanel() {
+  if (teacherRecorder && teacherRecorder.state === 'recording') {
+    teacherRecorder.stop();
+  }
+  document.getElementById('teacher-panel').style.display = 'none';
 }
 
 // ===== BUILD DAYS GRID =====
@@ -746,12 +1049,12 @@ function selectDay(dayIndex) {
   document.getElementById('taskBtn').textContent = DAILY_TASKS[dayIndex].icon;
 
   const speakBtn = document.getElementById('activitiesSpeakBtn');
-  speakBtn.onclick = () => speak(ENCOURAGEMENTS[dayIndex] + ' יש לנו משימה, שיר, ואפשר גם לשלוח משהו יפה לחברים מהגן!');
+  speakBtn.onclick = () => speak(ENCOURAGEMENTS[dayIndex] + ' יש לנו משימה, שיר, ואפשר גם לשלוח משהו יפה לחברים מהגן!', 'enc_full_' + dayIndex);
 
   document.getElementById('days-page').style.display = 'none';
   document.getElementById('activities-page').style.display = 'block';
 
-  speak(ENCOURAGEMENTS[dayIndex]);
+  speak(ENCOURAGEMENTS[dayIndex], 'enc_' + dayIndex);
 }
 
 function goBack(target) {
@@ -774,7 +1077,7 @@ function openActivity(type) {
   if (type === 'task') {
     const task = DAILY_TASKS[currentDay];
     let stepsHTML = task.steps.map((step, i) => `
-      <div class="step" onclick="speakStep(this, '${step.speak.replace(/'/g, "\\'")}')">
+      <div class="step" onclick="speakStep(this, '${step.speak.replace(/'/g, "\\'")}', 'task_step_${currentDay}_${i}')">
         <span class="step-num">${i + 1 <= 5 ? ['①','②','③','④','⑤'][i] : i+1}</span>
         <span class="step-icon">${step.icon}</span>
       </div>
@@ -784,13 +1087,13 @@ function openActivity(type) {
       <div class="detail-box">
         <div class="big-icon">${task.icon}</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('${task.spokenTitle.replace(/'/g, "\\'")}')">🔊</button>
+          <button class="speak-btn" onclick="speak('${task.spokenTitle.replace(/'/g, "\\'")}', 'task_title_${currentDay}')">🔊</button>
         </div>
         ${stepsHTML}
       </div>
     `;
 
-    speak(task.spokenTitle);
+    speak(task.spokenTitle, 'task_title_' + currentDay);
 
   } else if (type === 'song') {
     const song = DAILY_SONGS[currentDay];
@@ -805,14 +1108,14 @@ function openActivity(type) {
       </div>
     `;
 
-    speak(song.spoken);
+    speak(song.spoken, 'song_' + currentDay);
 
   } else if (type === 'contact') {
     content.innerHTML = `
       <div class="detail-box">
         <div class="big-icon">💌</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('מתגעגעים לחברים מהגן? בואו נשלח להם משהו יפה! אפשר להקליט הודעה, לצלם תמונה, או לצייר ציור!')">🔊</button>
+          <button class="speak-btn" onclick="speak('מתגעגעים לחברים מהגן? בואו נשלח להם משהו יפה! אפשר להקליט הודעה, לצלם תמונה, או לצייר ציור!', 'contact_intro')">🔊</button>
         </div>
         <div class="contact-grid">
           <div class="contact-big-btn mic-btn" onclick="openContactOption('record')">🎤</div>
@@ -822,15 +1125,15 @@ function openActivity(type) {
       </div>
     `;
 
-    speak('מתגעגעים לחברים? בואו נשלח להם משהו יפה! אפשר להקליט, לצלם, או לצייר!');
+    speak('מתגעגעים לחברים? בואו נשלח להם משהו יפה! אפשר להקליט, לצלם, או לצייר!', 'contact_intro');
   }
 
   document.getElementById('activities-page').style.display = 'none';
   document.getElementById('detail-page').style.display = 'block';
 }
 
-function speakStep(el, text) {
-  speak(text);
+function speakStep(el, text, key) {
+  speak(text, key);
   el.classList.add('done');
 }
 
@@ -842,7 +1145,7 @@ function openContactOption(option) {
       <div class="detail-box">
         <div class="big-icon">🎤</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!')">🔊</button>
+          <button class="speak-btn" onclick="speak('לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!', 'contact_record')">🔊</button>
         </div>
         <button class="record-big" id="recordBtn" onclick="toggleRecording()">🎤</button>
         <div id="playbackArea" style="display:none; text-align:center;">
@@ -850,28 +1153,28 @@ function openContactOption(option) {
         </div>
       </div>
     `;
-    speak('לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!');
+    speak('לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!', 'contact_record');
 
   } else if (option === 'photo') {
     content.innerHTML = `
       <div class="detail-box">
         <div class="big-icon">📸</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('לחצו על המצלמה וצלמו תמונה יפה!')">🔊</button>
+          <button class="speak-btn" onclick="speak('לחצו על המצלמה וצלמו תמונה יפה!', 'contact_photo')">🔊</button>
         </div>
         <div class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">📷</div>
         <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" onchange="previewPhoto(this)">
         <img id="photoPreview" class="preview-img" style="display:none;">
       </div>
     `;
-    speak('לחצו על המצלמה וצלמו תמונה יפה!');
+    speak('לחצו על המצלמה וצלמו תמונה יפה!', 'contact_photo');
 
   } else if (option === 'draw') {
     content.innerHTML = `
       <div class="detail-box">
         <div class="big-icon">🎨</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('בחרו צבע וציירו ציור יפה לחברים!')">🔊</button>
+          <button class="speak-btn" onclick="speak('בחרו צבע וציירו ציור יפה לחברים!', 'contact_draw')">🔊</button>
         </div>
         <div class="color-palette" id="colorPalette"></div>
         <div class="canvas-container">
@@ -884,7 +1187,7 @@ function openContactOption(option) {
       </div>
     `;
     initCanvas();
-    speak('בחרו צבע וציירו ציור יפה לחברים!');
+    speak('בחרו צבע וציירו ציור יפה לחברים!', 'contact_draw');
   }
 }
 
@@ -895,7 +1198,7 @@ function showSuccess(emoji) {
   overlay.innerHTML = `<div class="success-content">${emoji}<br>🎉</div>`;
   overlay.onclick = () => overlay.remove();
   document.body.appendChild(overlay);
-  speak('איזה יופי! כל הכבוד!');
+  speak('איזה יופי! כל הכבוד!', 'success');
   setTimeout(() => overlay.remove(), 2500);
 }
 
@@ -922,9 +1225,9 @@ async function toggleRecording() {
       isRecording = true;
       btn.classList.add('recording');
       btn.textContent = '⏹️';
-      speak('מקליטים! בואו נדבר!');
+      speak('מקליטים! בואו נדבר!', 'contact_recording_start');
     } catch (err) {
-      speak('צריך לאשר את המיקרופון, בקשו מאמא או אבא לעזור');
+      speak('צריך לאשר את המיקרופון, בקשו מאמא או אבא לעזור', 'contact_mic_error');
     }
   } else {
     mediaRecorder.stop();
@@ -1029,7 +1332,7 @@ function clearCanvas() {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  speak('מחקנו! אפשר להתחיל ציור חדש!');
+  speak('מחקנו! אפשר להתחיל ציור חדש!', 'clear_canvas');
 }
 
 function downloadDrawing() {
