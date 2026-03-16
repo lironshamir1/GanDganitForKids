@@ -107,23 +107,26 @@
       line-height: 1.2;
     }
 
-    .day-btn .day-dots {
-      display: flex;
-      gap: 4px;
-      justify-content: center;
-    }
-
-    .day-btn .day-dots .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.7);
+    .day-btn .day-name {
+      color: white;
+      font-size: 1em;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
 
     .day-btn.today {
       animation: pulse 2s infinite;
       border: 4px solid #fff;
       position: relative;
+      transform: scale(1.08);
+    }
+
+    .day-btn.today .day-name {
+      font-size: 1.3em;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 4px;
     }
 
     .day-btn.today::after {
@@ -158,47 +161,42 @@
 
     .day-header {
       text-align: center;
-      font-size: 3em;
+      font-size: 2em;
       margin: 5px 0;
+      color: #5d4037;
+      font-weight: 700;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+      padding: 10px;
     }
 
     .activities-grid {
-      display: grid;
+      display: flex;
+      justify-content: center;
       gap: 15px;
-      margin-top: 10px;
+      margin-top: 15px;
       padding-bottom: 20px;
     }
 
-    .activity-card {
-      background: white;
-      border-radius: 30px;
-      padding: 25px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    .activity-icon-btn {
+      width: 100px;
+      height: 100px;
+      border-radius: 25px;
+      border: none;
+      font-size: 3em;
       cursor: pointer;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
       transition: transform 0.2s;
       display: flex;
       align-items: center;
-      gap: 15px;
+      justify-content: center;
     }
 
-    .activity-card:active { transform: scale(0.97); }
+    .activity-icon-btn:active { transform: scale(0.9); }
 
-    .activity-card .card-icon {
-      font-size: 3.5em;
-      flex-shrink: 0;
-    }
-
-    .activity-card .card-visual {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      font-size: 1.8em;
-    }
-
-    /* Card colors */
-    .activity-card.task-card { border-right: 8px solid #ff9800; }
-    .activity-card.song-card { border-right: 8px solid #e91e63; }
-    .activity-card.contact-card { border-right: 8px solid #2196f3; }
+    .activity-icon-btn.task-btn { background: linear-gradient(135deg, #fff9c4, #ffe082); }
+    .activity-icon-btn.song-btn { background: linear-gradient(135deg, #f8bbd0, #f48fb1); }
+    .activity-icon-btn.msg-btn { background: linear-gradient(135deg, #b3e5fc, #81d4fa); }
 
     /* ===== DETAIL PAGE ===== */
     #detail-page { display: none; }
@@ -525,20 +523,9 @@
       </div>
 
       <div class="activities-grid">
-        <div class="activity-card task-card" onclick="openActivity('task')">
-          <span class="card-icon" id="taskCardIcon">🎯</span>
-          <span class="card-visual" id="taskCardVisual"></span>
-        </div>
-
-        <div class="activity-card song-card" onclick="openActivity('song')">
-          <span class="card-icon">🎵</span>
-          <span class="card-visual">🎤 🎶 🎸 💃</span>
-        </div>
-
-        <div class="activity-card contact-card" onclick="openActivity('contact')">
-          <span class="card-icon">💌</span>
-          <span class="card-visual">👫 🤗 ❤️</span>
-        </div>
+        <button class="activity-icon-btn task-btn" onclick="openActivity('task')" id="taskBtn">🎯</button>
+        <button class="activity-icon-btn song-btn" onclick="openActivity('song')">🎵</button>
+        <button class="activity-icon-btn msg-btn" onclick="openActivity('contact')">💌</button>
       </div>
     </div>
 
@@ -556,8 +543,6 @@
 // ===== DATA =====
 const DAYS = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת'];
 const DAY_EMOJIS = ['🌞', '🌈', '🌺', '🦋', '⭐', '🎉', '🕊️'];
-// Number dots per day (1-7) for visual day identification
-const DAY_DOTS = [1, 2, 3, 4, 5, 6, 7];
 
 const ENCOURAGEMENTS = [
   'שלום ילדים! היום יום ראשון! יום של כיף!',
@@ -746,15 +731,10 @@ function buildDaysGrid() {
     emojiSpan.textContent = DAY_EMOJIS[i];
     btn.appendChild(emojiSpan);
 
-    // Visual dots to show day number (1-7)
-    const dotsDiv = document.createElement('div');
-    dotsDiv.className = 'day-dots';
-    for (let d = 0; d < DAY_DOTS[i]; d++) {
-      const dot = document.createElement('span');
-      dot.className = 'dot';
-      dotsDiv.appendChild(dot);
-    }
-    btn.appendChild(dotsDiv);
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'day-name';
+    nameSpan.textContent = day;
+    btn.appendChild(nameSpan);
 
     grid.appendChild(btn);
   });
@@ -762,9 +742,8 @@ function buildDaysGrid() {
 
 function selectDay(dayIndex) {
   currentDay = dayIndex;
-  document.getElementById('dayHeader').textContent = DAY_EMOJIS[dayIndex];
-  document.getElementById('taskCardIcon').textContent = DAILY_TASKS[dayIndex].icon;
-  document.getElementById('taskCardVisual').textContent = DAILY_TASKS[dayIndex].visualEmojis;
+  document.getElementById('dayHeader').textContent = DAY_EMOJIS[dayIndex] + ' ' + DAYS[dayIndex];
+  document.getElementById('taskBtn').textContent = DAILY_TASKS[dayIndex].icon;
 
   const speakBtn = document.getElementById('activitiesSpeakBtn');
   speakBtn.onclick = () => speak(ENCOURAGEMENTS[dayIndex] + ' יש לנו משימה, שיר, ואפשר גם לשלוח חיבוק לחברים!');
