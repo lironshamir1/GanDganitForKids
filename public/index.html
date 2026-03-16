@@ -138,6 +138,51 @@
       animation: point 1s infinite alternate;
     }
 
+    .day-btn:not(.today) {
+      opacity: 0.5;
+    }
+
+    /* ===== WRONG DAY MESSAGE ===== */
+    .wrong-day-msg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 30px;
+      padding: 30px 40px;
+      text-align: center;
+      z-index: 100;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: popIn 0.4s;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    .wrong-day-msg .wrong-icon {
+      font-size: 3.5em;
+      margin-bottom: 10px;
+    }
+
+    .wrong-day-msg .wrong-text {
+      font-size: 1.2em;
+      color: #e91e63;
+      font-weight: 700;
+    }
+
+    .wrong-day-msg .right-day {
+      font-size: 1.1em;
+      color: #5d4037;
+      margin-top: 8px;
+    }
+
+    .wrong-day-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 99;
+      animation: fadeIn 0.3s;
+    }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
@@ -915,9 +960,32 @@ function openTeacherPanel() {
     </div>
   `;
 
-  // Greeting
-  html += buildTeacherSection('ברכת פתיחה', [
-    { key: 'greeting', text: 'שלום ילדים יקרים! איזה יום היום? בואו נמצא את היום שלנו!' }
+  // Active day selector
+  const activeDay = getActiveDay();
+  html += `<div class="teacher-section">
+    <h3>📅 באיזה יום אנחנו היום?</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+      ${DAYS.map((day, i) => `
+        <button onclick="setActiveDay(${i})" style="
+          padding:8px 14px; border-radius:15px; border:2px solid ${i === activeDay ? '#4caf50' : '#ddd'};
+          background:${i === activeDay ? '#e8f5e9' : 'white'}; font-family:Rubik; font-weight:${i === activeDay ? '700' : '400'};
+          cursor:pointer; font-size:0.9em; color:#333;
+        ">${DAY_EMOJIS[i]} ${day}</button>
+      `).join('')}
+      <button onclick="setActiveDay(-1)" style="
+        padding:8px 14px; border-radius:15px; border:2px solid ${localStorage.getItem('ganTeacher_activeDay') === null ? '#4caf50' : '#ddd'};
+        background:${localStorage.getItem('ganTeacher_activeDay') === null ? '#e8f5e9' : 'white'}; font-family:Rubik;
+        cursor:pointer; font-size:0.9em; color:#333;
+      ">🔄 אוטומטי</button>
+    </div>
+  </div>`;
+
+  // Greeting + day names
+  const dayNameItems = DAYS.map((day, i) => ({ key: `day_name_${i}`, text: day }));
+  html += buildTeacherSection('ברכת פתיחה ושמות הימים', [
+    { key: 'greeting', text: 'שלום ילדים יקרים! איזה יום היום? בואו נמצא את היום שלנו!' },
+    { key: 'wrong_day', text: 'לא, זה לא היום שלנו!' },
+    ...dayNameItems
   ]);
 
   // Encouragements per day
@@ -1065,6 +1133,19 @@ function teacherDelete(key) {
   openTeacherPanel();
 }
 
+function setActiveDay(dayIndex) {
+  if (dayIndex === -1) {
+    localStorage.removeItem('ganTeacher_activeDay');
+  } else {
+    localStorage.setItem('ganTeacher_activeDay', dayIndex);
+  }
+  openTeacherPanel();
+  // Rebuild the days grid to reflect new active day
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+  buildDaysGrid();
+}
+
 function closeTeacherPanel() {
   if (teacherRecorder && teacherRecorder.state === 'recording') {
     teacherRecorder.stop();
@@ -1072,15 +1153,44 @@ function closeTeacherPanel() {
   document.getElementById('teacher-panel').style.display = 'none';
 }
 
+// ===== WRONG DAY MESSAGE =====
+function showWrongDay(activeDay) {
+  // Remove any existing message
+  const existing = document.querySelectorAll('.wrong-day-overlay, .wrong-day-msg');
+  existing.forEach(el => el.remove());
+
+  const overlay = document.createElement('div');
+  overlay.className = 'wrong-day-overlay';
+
+  const msg = document.createElement('div');
+  msg.className = 'wrong-day-msg';
+  msg.innerHTML = `
+    <div class="wrong-icon">🙈</div>
+    <div class="wrong-text">אופס! זה לא היום!</div>
+    <div class="right-day">${DAY_EMOJIS[activeDay]} היום ${DAYS[activeDay]}</div>
+  `;
+
+  const closeAll = () => { overlay.remove(); msg.remove(); };
+  overlay.onclick = closeAll;
+  msg.onclick = closeAll;
+  setTimeout(closeAll, 3000);
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(msg);
+}
+
 // ===== BUILD DAYS GRID =====
 function buildDaysGrid() {
   const grid = document.getElementById('daysGrid');
-  const today = new Date().getDay();
+  const activeDay = getActiveDay();
 
   DAYS.forEach((day, i) => {
     const btn = document.createElement('button');
-    btn.className = 'day-btn' + (i === today ? ' today' : '');
-    btn.onclick = () => selectDay(i);
+    btn.className = 'day-btn' + (i === activeDay ? ' today' : '');
+    btn.onclick = () => {
+      speak(DAYS[i], 'day_name_' + i);
+      selectDay(i);
+    };
 
     const emojiSpan = document.createElement('span');
     emojiSpan.className = 'day-emoji';
@@ -1096,7 +1206,23 @@ function buildDaysGrid() {
   });
 }
 
+function getActiveDay() {
+  // Teacher can override via localStorage, otherwise use system day
+  const override = localStorage.getItem('ganTeacher_activeDay');
+  if (override !== null) return parseInt(override);
+  return new Date().getDay();
+}
+
 function selectDay(dayIndex) {
+  const activeDay = getActiveDay();
+
+  if (dayIndex !== activeDay) {
+    // Wrong day - show message
+    showWrongDay(activeDay);
+    speak('לא, זה לא היום שלנו! היום ' + DAYS[activeDay] + '!', 'wrong_day');
+    return;
+  }
+
   currentDay = dayIndex;
   document.getElementById('dayHeader').textContent = DAY_EMOJIS[dayIndex] + ' ' + DAYS[dayIndex];
   document.getElementById('taskBtn').textContent = DAILY_TASKS[dayIndex].icon;
