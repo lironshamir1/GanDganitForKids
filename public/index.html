@@ -507,7 +507,7 @@
     <!-- ===== DAYS PAGE ===== -->
     <div id="days-page">
       <div class="speak-hint">
-        <button class="speak-btn" onclick="speak('היי חמודים שלי! איזה יום היום? מצאו את היום שלנו ותלחצו עליו!')">🔊</button>
+        <button class="speak-btn" onclick="speak('שלום ילדים יקרים! איזה יום היום? בואו נמצא את היום שלנו!')">🔊</button>
       </div>
 
       <div class="days-grid" id="daysGrid"></div>
@@ -545,104 +545,104 @@ const DAYS = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום
 const DAY_EMOJIS = ['🌞', '🌈', '🌺', '🦋', '⭐', '🎉', '🕊️'];
 
 const ENCOURAGEMENTS = [
-  'היי מתוקים! איזה כיף, התחלנו שבוע חדש! יאללה, בואו נראה מה מחכה לנו היום!',
-  'בוקר טוב חמודים! יום שני כבר כאן! מוכנים לכיף?',
-  'היי לכם! יום שלישי, באמצע השבוע! הכנתי לכם משהו מיוחד!',
-  'מה נשמע חמודים? יום רביעי! עוד קצת ומגיע סוף שבוע!',
-  'הידד! יום חמישי! כמעט כמעט סוף שבוע! בואו נעשה משהו כיפי!',
-  'שישי שמח חמודים שלי! יום של משפחה ושל כיף!',
-  'שבת שלום מתוקים! יום של מנוחה, משחקים ושלווה!'
+  'בוקר טוב ילדים יקרים! שבוע חדש מתחיל, ויש לנו דברים נפלאים לעשות ביחד!',
+  'בוקר טוב יקרים שלי! יום שני, ואני כבר שמחה לראות אתכם! בואו נראה מה הכנתי לכם!',
+  'בוקר אור! יום שלישי, אנחנו כבר באמצע השבוע! הכנתי לכם דבר מיוחד היום!',
+  'שלום לכם ילדים! יום רביעי, ועוד קצת מגיע סוף שבוע! בינתיים, בואו ניהנה!',
+  'בוקר טוב! יום חמישי כבר כאן, כמעט סוף שבוע! בואו נעשה משהו נהדר!',
+  'שישי שמח ילדים יקרים! יום של חום, של משפחה, ושל שמחה!',
+  'שבת שלום ילדים אהובים! היום ננוח, נשחק, וניהנה ביחד!'
 ];
 
 const DAILY_TASKS = [
   {
     title: 'בונים מאורה!',
     icon: '🏰',
-    spokenTitle: 'היום אנחנו בונים מאורה משמיכות! זה ממש כיף, תראו!',
+    spokenTitle: 'היום אנחנו בונים מאורה משמיכות! זה הולך להיות נפלא!',
     steps: [
-      { icon: '🛏️', speak: 'ככה, קודם כל תביאו שמיכות גדולות מהארון' },
-      { icon: '🪑', speak: 'עכשיו תשימו כיסאות אחד ליד השני בשורה' },
-      { icon: '⛺', speak: 'יופי! עכשיו תפרסו את השמיכה למעלה, מעל הכיסאות' },
-      { icon: '🛋️', speak: 'תכניסו כריות פנימה, ככה יהיה לכם רך ונעים' },
-      { icon: '🔦', speak: 'אחלה! עכשיו תיקחו פנס ותיכנסו לשחק בפנים!' }
+      { icon: '🛏️', speak: 'קודם כל, בואו נביא שמיכות גדולות מהארון' },
+      { icon: '🪑', speak: 'עכשיו נשים כיסאות אחד ליד השני, בשורה יפה' },
+      { icon: '⛺', speak: 'נפלא! עכשיו נפרוס את השמיכה למעלה, מעל הכיסאות' },
+      { icon: '🛋️', speak: 'נכניס כריות פנימה, שיהיה רך ונעים' },
+      { icon: '🔦', speak: 'איזה כיף! עכשיו ניקח פנס וניכנס לשחק בפנים!' }
     ],
     visualEmojis: '🛏️ 🪑 ⛺'
   },
   {
     title: 'בונים מקופסאות!',
     icon: '📦',
-    spokenTitle: 'אתם יודעים מה? היום אנחנו בונים דברים מגניבים מקופסאות!',
+    spokenTitle: 'היום אנחנו בונים דברים מקופסאות! בואו נראה מה נצליח ליצור!',
     steps: [
-      { icon: '📦', speak: 'תלכו למטבח ותאספו קופסאות ריקות, של חלב, של דגנים, מה שיש' },
-      { icon: '🧴', speak: 'תביאו דבק או סלוטייפ, מה שאמא מרשה' },
-      { icon: '🏗️', speak: 'יאללה, תנסו לבנות מגדל הכי גבוה שאפשר!' },
-      { icon: '🤖', speak: 'או יודעים מה? תבנו רובוט! או מכונית! מה שבא לכם!' },
-      { icon: '🖍️', speak: 'סבבה, עכשיו תצבעו את מה שבניתם, שיהיה יפהפה' }
+      { icon: '📦', speak: 'בואו נלך למטבח ונאסוף קופסאות ריקות, של חלב, של דגנים' },
+      { icon: '🧴', speak: 'עכשיו נביא דבק או סלוטייפ' },
+      { icon: '🏗️', speak: 'בואו ננסה לבנות מגדל, הכי גבוה שאפשר!' },
+      { icon: '🤖', speak: 'או אולי רובוט! או מכונית! מה שתרצו!' },
+      { icon: '🖍️', speak: 'יפה מאוד! עכשיו נצבע את מה שבנינו, שיהיה צבעוני ויפה' }
     ],
     visualEmojis: '📦 🏗️ 🤖'
   },
   {
     title: 'מסלול מכשולים!',
     icon: '🏃',
-    spokenTitle: 'היום בונים מסלול מכשולים בסלון! מי מוכן לזוז?',
+    spokenTitle: 'היום אנחנו בונים מסלול מכשולים בסלון! מי מוכן לזוז?',
     steps: [
-      { icon: '🛋️', speak: 'תפזרו כריות על הרצפה, אלה האבנים שלנו' },
-      { icon: '🦘', speak: 'עכשיו תקפצו מכרית לכרית, אסור לגעת ברצפה!' },
-      { icon: '🫧', speak: 'תזחלו מתחת לשולחן כמו חיילים' },
-      { icon: '🏃', speak: 'יאללה, תרוצו חזק עד הסוף!' },
-      { icon: '🎉', speak: 'הצלחתם! עכשיו שלוש קפיצות של ניצחון, יאללה!' }
+      { icon: '🛋️', speak: 'נפזר כריות על הרצפה, כל כרית היא אבן!' },
+      { icon: '🦘', speak: 'עכשיו נקפוץ מכרית לכרית, בלי לגעת ברצפה!' },
+      { icon: '🫧', speak: 'נזחל מתחת לשולחן, לאט ובזהירות' },
+      { icon: '🏃', speak: 'ועכשיו רצים חזק עד הסוף!' },
+      { icon: '🎉', speak: 'הצלחנו! עכשיו שלוש קפיצות של שמחה!' }
     ],
     visualEmojis: '🛋️ 🦘 🏃'
   },
   {
     title: 'כדורי שוקולד!',
     icon: '🍫',
-    spokenTitle: 'ממממ, היום מכינים כדורי שוקולד! תקראו לאמא או לאבא שיעזרו!',
+    spokenTitle: 'מממ, היום אנחנו מכינים כדורי שוקולד! בואו נקרא לאמא או לאבא לעזור!',
     steps: [
-      { icon: '🍪', speak: 'תבקשו מאמא או מאבא ביסקוויטים ושוקולד' },
-      { icon: '💥', speak: 'עכשיו תשברו את הביסקוויטים לחתיכות קטנות קטנות' },
-      { icon: '🍫', speak: 'תוסיפו שוקולד, ממממ, איזה ריח' },
-      { icon: '🤲', speak: 'תגלגלו כדורים עגולים עם הידיים, ככה, יופי' },
-      { icon: '❄️', speak: 'מעולה! עכשיו שמים בהקפאה ומחכים. קשה לחכות, אבל שווה!' }
+      { icon: '🍪', speak: 'נבקש מאמא או מאבא ביסקוויטים ושוקולד' },
+      { icon: '💥', speak: 'עכשיו נשבור את הביסקוויטים לחתיכות קטנות קטנות' },
+      { icon: '🍫', speak: 'נוסיף שוקולד, מממ, איזה ריח טוב' },
+      { icon: '🤲', speak: 'נגלגל כדורים עגולים ויפים עם הידיים' },
+      { icon: '❄️', speak: 'נהדר! עכשיו נשים בהקפאה ונחכה. שווה לחכות!' }
     ],
     visualEmojis: '🍪 🍫 🤲'
   },
   {
     title: 'משחקים חנות!',
     icon: '🛒',
-    spokenTitle: 'היום פותחים חנות בבית! מי רוצה להיות המוכר?',
+    spokenTitle: 'היום אנחנו פותחים חנות בבית! מי רוצה להיות מוכר ומי רוצה לקנות?',
     steps: [
-      { icon: '🧸', speak: 'תאספו צעצועים ודברים מהבית, כל מה שמצאתם' },
-      { icon: '🛍️', speak: 'תסדרו הכל יפה על שולחן, כמו חנות אמיתית' },
-      { icon: '💵', speak: 'תגזרו נייר ותעשו כסף, כל פיסה זה שקל' },
-      { icon: '🤝', speak: 'אחד מוכר ואחד קונה, אפשר להתחלף!' },
-      { icon: '😊', speak: 'ואל תשכחו להגיד תודה ובבקשה, כמו בחנות אמיתית!' }
+      { icon: '🧸', speak: 'בואו נאסוף צעצועים ודברים מהבית' },
+      { icon: '🛍️', speak: 'נסדר הכל יפה על השולחן, כמו חנות אמיתית' },
+      { icon: '💵', speak: 'נגזור נייר ונכין כסף למשחק' },
+      { icon: '🤝', speak: 'אחד מוכר ואחד קונה, ואפשר להתחלף!' },
+      { icon: '😊', speak: 'לא לשכוח לומר תודה ובבקשה, כמו בחנות אמיתית!' }
     ],
     visualEmojis: '🧸 🛍️ 🤝'
   },
   {
     title: 'פלסטלינה!',
     icon: '🎨',
-    spokenTitle: 'היום משחקים עם פלסטלינה! אני אוהבת את זה!',
+    spokenTitle: 'היום אנחנו יוצרים עם פלסטלינה! בואו נראה מה הידיים שלנו יודעות לעשות!',
     steps: [
-      { icon: '🎨', speak: 'תוציאו פלסטלינה, כל הצבעים שיש לכם' },
-      { icon: '🌸', speak: 'תנסו לעשות פרח, עם עלים וגבעול' },
-      { icon: '🐱', speak: 'או חיה! חתול, כלב, מה שבא לכם' },
-      { icon: '👨‍👩‍👧‍👦', speak: 'תעשו משפחה שלמה, עם אמא ואבא וילדים' },
-      { icon: '📖', speak: 'ועכשיו תספרו סיפור על המשפחה שעשיתם!' }
+      { icon: '🎨', speak: 'נוציא פלסטלינה בכל הצבעים שיש' },
+      { icon: '🌸', speak: 'ננסה לעשות פרח יפה, עם עלים וגבעול' },
+      { icon: '🐱', speak: 'או אולי חיה? חתול, כלב, מה שתרצו!' },
+      { icon: '👨‍👩‍👧‍👦', speak: 'בואו נעשה משפחה שלמה, עם אמא ואבא וילדים' },
+      { icon: '📖', speak: 'ועכשיו נספר סיפור על המשפחה שיצרנו!' }
     ],
     visualEmojis: '🎨 🌸 🐱'
   },
   {
     title: 'מגדל קוביות!',
     icon: '🃏',
-    spokenTitle: 'שבת שלום! בואו נבנה מגדל הכי גבוה שאפשר, מקלפים או מקוביות!',
+    spokenTitle: 'שבת שלום! בואו נבנה ביחד מגדל גבוה גבוה, מקלפים או מקוביות!',
     steps: [
-      { icon: '🃏', speak: 'תביאו קלפים או קוביות, מה שיש בבית' },
-      { icon: '🏗️', speak: 'תתחילו לבנות מגדל, לאט לאט, בזהירות' },
-      { icon: '📏', speak: 'וואו, כמה גבוה הגעתם? מדהים!' },
-      { icon: '💨', speak: 'אם נפל, לא קרה כלום! מתחילים מהתחלה, זה חלק מהכיף' },
-      { icon: '📸', speak: 'תצלמו את המגדל שלכם, שכולם יראו!' }
+      { icon: '🃏', speak: 'נביא קלפים או קוביות, מה שנמצא בבית' },
+      { icon: '🏗️', speak: 'נתחיל לבנות מגדל, לאט ובזהירות' },
+      { icon: '📏', speak: 'איזה גבוה! כמה קומות הצלחנו?' },
+      { icon: '💨', speak: 'אם נפל, לא נורא! נתחיל מחדש, זה חלק מהמשחק' },
+      { icon: '📸', speak: 'בואו נצלם את המגדל שלנו!' }
     ],
     visualEmojis: '🃏 🏗️ 📸'
   }
@@ -651,43 +651,43 @@ const DAILY_TASKS = [
 const DAILY_SONGS = [
   {
     title: 'דביבון הולך לגן',
-    spoken: 'אתם מכירים את דביבון? יאללה, בואו נשמע את השיר שלו! תלחצו על הכפתור!',
+    spoken: 'אתם מכירים את דביבון? בואו נשמע את השיר היפה שלו ביחד!',
     emojis: '🦝 🏫 🎵',
     youtube: 'https://www.youtube.com/results?search_query=דביבון+הולך+לגן+שיר+ילדים'
   },
   {
     title: 'ראש כתפיים ברכיים',
-    spoken: 'יאללה קומו! היום שרים ראש כתפיים ברכיים! תתחילו לזוז!',
+    spoken: 'בואו נקום ונזוז! היום שרים ראש, כתפיים, ברכיים, אצבעות!',
     emojis: '🙆 💪 🦵',
     youtube: 'https://www.youtube.com/results?search_query=ראש+כתפיים+ברכיים+אצבעות+ילדים'
   },
   {
     title: 'אם אתה שמח',
-    spoken: 'מי שמח פה? בטח שכן! יאללה, שרים אם אתה שמח, ומוחאים כפיים!',
+    spoken: 'מי שמח היום? בואו נשיר ביחד, אם אתה שמח ואתה יודע, ונמחא כפיים!',
     emojis: '😊 👏 🎵',
     youtube: 'https://www.youtube.com/results?search_query=אם+אתה+שמח+שיר+ילדים'
   },
   {
     title: 'יונתן הקטן',
-    spoken: 'אתם אוהבים את יונתן הקטן? גם אני! יאללה, שומעים ביחד!',
+    spoken: 'בואו נשמע שיר יפה על יונתן הקטן! תלחצו על הכפתור!',
     emojis: '👦 🌬️ 🎵',
     youtube: 'https://www.youtube.com/results?search_query=יונתן+הקטן+שיר+ילדים'
   },
   {
     title: 'שיר הגשם',
-    spoken: 'טיף טיף טוף! מי שומע גשם? בואו נשיר על גשם!',
+    spoken: 'טיף טיף טוף! בואו נשיר ביחד שיר על הגשם!',
     emojis: '🌧️ ☔ 💧',
     youtube: 'https://www.youtube.com/results?search_query=טיף+טיף+טוף+שיר+גשם+ילדים'
   },
   {
     title: 'שבת שלום',
-    spoken: 'שישי! אז שרים שיר של שבת שלום! תלחצו על הכפתור!',
+    spoken: 'ערב שבת! בואו נשיר ביחד שיר שבת שלום!',
     emojis: '🕯️ 🍷 ✨',
     youtube: 'https://www.youtube.com/results?search_query=שבת+שלום+שיר+ילדים'
   },
   {
     title: 'שירי שבת',
-    spoken: 'שבת שלום חמודים! בואו נשמע שיר יפה של שבת!',
+    spoken: 'שבת שלום ילדים יקרים! בואו נשמע שיר יפה לכבוד השבת!',
     emojis: '🕊️ 🕯️ 💛',
     youtube: 'https://www.youtube.com/results?search_query=שירי+שבת+לילדים'
   }
@@ -746,7 +746,7 @@ function selectDay(dayIndex) {
   document.getElementById('taskBtn').textContent = DAILY_TASKS[dayIndex].icon;
 
   const speakBtn = document.getElementById('activitiesSpeakBtn');
-  speakBtn.onclick = () => speak(ENCOURAGEMENTS[dayIndex] + ' יש פה משימה כיפית, שיר, ואפשר גם לשלוח הודעה לחברים מהגן!');
+  speakBtn.onclick = () => speak(ENCOURAGEMENTS[dayIndex] + ' יש לנו משימה, שיר, ואפשר גם לשלוח משהו יפה לחברים מהגן!');
 
   document.getElementById('days-page').style.display = 'none';
   document.getElementById('activities-page').style.display = 'block';
@@ -812,7 +812,7 @@ function openActivity(type) {
       <div class="detail-box">
         <div class="big-icon">💌</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('מתגעגעים לחברים מהגן? גם אני! אז בואו נשלח להם משהו! אפשר להקליט הודעה, לצלם תמונה, או לצייר ציור!')">🔊</button>
+          <button class="speak-btn" onclick="speak('מתגעגעים לחברים מהגן? בואו נשלח להם משהו יפה! אפשר להקליט הודעה, לצלם תמונה, או לצייר ציור!')">🔊</button>
         </div>
         <div class="contact-grid">
           <div class="contact-big-btn mic-btn" onclick="openContactOption('record')">🎤</div>
@@ -822,7 +822,7 @@ function openActivity(type) {
       </div>
     `;
 
-    speak('מתגעגעים לחברים? גם אני! אז מה בא לכם לעשות? להקליט משהו, לצלם, או לצייר?');
+    speak('מתגעגעים לחברים? בואו נשלח להם משהו יפה! אפשר להקליט, לצלם, או לצייר!');
   }
 
   document.getElementById('activities-page').style.display = 'none';
@@ -842,7 +842,7 @@ function openContactOption(option) {
       <div class="detail-box">
         <div class="big-icon">🎤</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('תלחצו על העיגול האדום ותתחילו לדבר! ספרו לחברים מה עשיתם היום, מה קרה, מה שבא לכם!')">🔊</button>
+          <button class="speak-btn" onclick="speak('לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!')">🔊</button>
         </div>
         <button class="record-big" id="recordBtn" onclick="toggleRecording()">🎤</button>
         <div id="playbackArea" style="display:none; text-align:center;">
@@ -850,28 +850,28 @@ function openContactOption(option) {
         </div>
       </div>
     `;
-    speak('תלחצו על העיגול האדום ותתחילו לדבר! ספרו לחברים מה עשיתם היום, מה קרה, מה שבא לכם!');
+    speak('לחצו על העיגול האדום ודברו! ספרו לחברים מה עשיתם היום!');
 
   } else if (option === 'photo') {
     content.innerHTML = `
       <div class="detail-box">
         <div class="big-icon">📸</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('תלחצו על המצלמה ותצלמו תמונה! של הפנים שלכם, של משהו שעשיתם, מה שבא לכם!')">🔊</button>
+          <button class="speak-btn" onclick="speak('לחצו על המצלמה וצלמו תמונה יפה!')">🔊</button>
         </div>
         <div class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">📷</div>
         <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" onchange="previewPhoto(this)">
         <img id="photoPreview" class="preview-img" style="display:none;">
       </div>
     `;
-    speak('תלחצו על המצלמה ותצלמו תמונה! של הפנים שלכם, של משהו שעשיתם, מה שבא לכם!');
+    speak('לחצו על המצלמה וצלמו תמונה יפה!');
 
   } else if (option === 'draw') {
     content.innerHTML = `
       <div class="detail-box">
         <div class="big-icon">🎨</div>
         <div class="speak-hint">
-          <button class="speak-btn" onclick="speak('יאללה, תבחרו צבע ותתחילו לצייר! ציירו מה שבא לכם, לחברים מהגן!')">🔊</button>
+          <button class="speak-btn" onclick="speak('בחרו צבע וציירו ציור יפה לחברים!')">🔊</button>
         </div>
         <div class="color-palette" id="colorPalette"></div>
         <div class="canvas-container">
@@ -884,7 +884,7 @@ function openContactOption(option) {
       </div>
     `;
     initCanvas();
-    speak('יאללה, תבחרו צבע ותתחילו לצייר! ציירו מה שבא לכם, לחברים מהגן!');
+    speak('בחרו צבע וציירו ציור יפה לחברים!');
   }
 }
 
@@ -895,7 +895,7 @@ function showSuccess(emoji) {
   overlay.innerHTML = `<div class="success-content">${emoji}<br>🎉</div>`;
   overlay.onclick = () => overlay.remove();
   document.body.appendChild(overlay);
-  speak('איזה יופי! כל הכבוד, אלופים!');
+  speak('איזה יופי! כל הכבוד!');
   setTimeout(() => overlay.remove(), 2500);
 }
 
@@ -922,9 +922,9 @@ async function toggleRecording() {
       isRecording = true;
       btn.classList.add('recording');
       btn.textContent = '⏹️';
-      speak('יאללה, מקליטים! תדברו!');
+      speak('מקליטים! בואו נדבר!');
     } catch (err) {
-      speak('רגע, צריך ללחוץ אישור על המיקרופון, תבקשו מאמא או אבא');
+      speak('צריך לאשר את המיקרופון, בקשו מאמא או אבא לעזור');
     }
   } else {
     mediaRecorder.stop();
@@ -1029,7 +1029,7 @@ function clearCanvas() {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  speak('הופ, מחקנו הכל! אפשר להתחיל ציור חדש!');
+  speak('מחקנו! אפשר להתחיל ציור חדש!');
 }
 
 function downloadDrawing() {
