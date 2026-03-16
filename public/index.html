@@ -2,95 +2,147 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌻 גן דגנית - הגן שלנו בבית</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌻 גן דגנית</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap');
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Rubik', sans-serif;
       background: linear-gradient(135deg, #fff9c4 0%, #f8bbd0 50%, #b3e5fc 100%);
       min-height: 100vh;
       direction: rtl;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
+    /* ===== HEADER ===== */
     .header {
       background: linear-gradient(135deg, #ff9800, #f44336, #e91e63);
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 15px;
       border-radius: 0 0 30px 30px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-
-    .header h1 {
       font-size: 2em;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .header p {
-      font-size: 1.1em;
-      margin-top: 5px;
-      opacity: 0.9;
     }
 
     .container {
       max-width: 500px;
       margin: 0 auto;
-      padding: 15px;
+      padding: 10px;
     }
+
+    /* ===== SPEAK BUTTON (on every page) ===== */
+    .speak-hint {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .speak-btn {
+      background: linear-gradient(135deg, #7c4dff, #e040fb);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.8em;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(124,77,255,0.4);
+      animation: bounce 2s infinite;
+      color: white;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ===== BACK BUTTON ===== */
+    .back-btn {
+      background: white;
+      border: 3px solid #ff9800;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      font-size: 1.8em;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      margin: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:active { transform: scale(0.9); }
 
     /* ===== DAYS PAGE ===== */
-    #days-page .greeting {
-      text-align: center;
-      font-size: 1.3em;
-      color: #5d4037;
-      margin: 15px 0;
-      padding: 15px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 20px;
-    }
-
     .days-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-top: 10px;
+      padding-bottom: 20px;
     }
 
     .day-btn {
       border: none;
-      border-radius: 20px;
-      padding: 20px 10px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 1.3em;
-      font-weight: 700;
-      color: white;
+      border-radius: 25px;
+      padding: 15px;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
 
-    .day-btn:hover, .day-btn:active {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    .day-btn:active { transform: scale(0.95); }
+
+    .day-btn .day-emoji {
+      font-size: 3em;
+      line-height: 1.2;
+    }
+
+    .day-btn .day-dots {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .day-btn .day-dots .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
     }
 
     .day-btn.today {
       animation: pulse 2s infinite;
-      border: 3px solid #fff;
+      border: 4px solid #fff;
+      position: relative;
+    }
+
+    .day-btn.today::after {
+      content: '👈';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      font-size: 1.5em;
+      animation: point 1s infinite alternate;
     }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
+    }
+
+    @keyframes point {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(8px); }
     }
 
     .day-btn:nth-child(1) { background: linear-gradient(135deg, #f44336, #e91e63); }
@@ -99,266 +151,243 @@
     .day-btn:nth-child(4) { background: linear-gradient(135deg, #2196f3, #03a9f4); }
     .day-btn:nth-child(5) { background: linear-gradient(135deg, #9c27b0, #e91e63); }
     .day-btn:nth-child(6) { background: linear-gradient(135deg, #ff9800, #ffc107); }
-    .day-btn:nth-child(7) { background: linear-gradient(135deg, #607d8b, #9e9e9e); }
-
-    .day-btn .emoji {
-      display: block;
-      font-size: 1.5em;
-      margin-bottom: 5px;
-    }
+    .day-btn:nth-child(7) { background: linear-gradient(135deg, #607d8b, #78909c); }
 
     /* ===== ACTIVITIES PAGE ===== */
-    #activities-page {
-      display: none;
-    }
+    #activities-page { display: none; }
 
-    .back-btn {
-      background: rgba(255,255,255,0.8);
-      border: none;
-      border-radius: 50px;
-      padding: 10px 25px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 1em;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 15px 0;
-      color: #5d4037;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .day-title {
+    .day-header {
       text-align: center;
-      font-size: 1.5em;
-      color: #5d4037;
-      margin: 10px 0;
+      font-size: 3em;
+      margin: 5px 0;
+    }
+
+    .activities-grid {
+      display: grid;
+      gap: 15px;
+      margin-top: 10px;
+      padding-bottom: 20px;
     }
 
     .activity-card {
       background: white;
-      border-radius: 25px;
-      padding: 20px;
-      margin: 15px 0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .activity-card:hover {
-      transform: scale(1.02);
-    }
-
-    .activity-card .icon {
-      font-size: 2.5em;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .activity-card h3 {
-      text-align: center;
-      color: #5d4037;
-      font-size: 1.2em;
-      margin-bottom: 8px;
-    }
-
-    .activity-card p {
-      text-align: center;
-      color: #795548;
-      font-size: 0.95em;
-      line-height: 1.6;
-    }
-
-    /* ===== DETAIL PAGES ===== */
-    #detail-page {
-      display: none;
-    }
-
-    .detail-content {
-      background: white;
-      border-radius: 25px;
+      border-radius: 30px;
       padding: 25px;
-      margin: 15px 0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .detail-content h2 {
-      text-align: center;
-      color: #e91e63;
-      margin-bottom: 15px;
-      font-size: 1.4em;
-    }
-
-    .detail-content .task-icon {
-      text-align: center;
-      font-size: 4em;
-      margin: 15px 0;
-    }
-
-    .detail-content .instructions {
-      background: #fff9c4;
-      border-radius: 15px;
-      padding: 15px;
-      margin: 10px 0;
-      line-height: 1.8;
-      font-size: 1.05em;
-      color: #5d4037;
-    }
-
-    .detail-content .instructions li {
-      margin: 8px 0;
-      list-style: none;
-    }
-
-    .detail-content .instructions li::before {
-      content: "⭐ ";
-    }
-
-    .song-player {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .song-player .song-title {
-      font-size: 1.3em;
-      color: #e91e63;
-      margin: 10px 0;
-    }
-
-    .song-player .song-lyrics {
-      background: #f3e5f5;
-      border-radius: 15px;
-      padding: 15px;
-      margin: 10px 0;
-      line-height: 2;
-      font-size: 1.05em;
-      color: #4a148c;
-      white-space: pre-line;
-    }
-
-    .song-player .youtube-link {
-      display: inline-block;
-      background: #f44336;
-      color: white;
-      padding: 12px 30px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1em;
-      margin-top: 15px;
-      box-shadow: 0 3px 10px rgba(244,67,54,0.3);
-    }
-
-    /* ===== KEEP IN TOUCH ===== */
-    .contact-options {
-      display: grid;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .contact-btn {
-      background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
-      border: 2px solid #03a9f4;
-      border-radius: 20px;
-      padding: 18px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 1.1em;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
       cursor: pointer;
-      text-align: center;
       transition: transform 0.2s;
-      color: #01579b;
-      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
-    .contact-btn:hover {
-      transform: scale(1.03);
+    .activity-card:active { transform: scale(0.97); }
+
+    .activity-card .card-icon {
+      font-size: 3.5em;
+      flex-shrink: 0;
     }
 
-    .contact-btn .btn-icon {
-      font-size: 2em;
-      display: block;
-      margin-bottom: 8px;
+    .activity-card .card-visual {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 1.8em;
     }
 
-    .record-area {
+    /* Card colors */
+    .activity-card.task-card { border-right: 8px solid #ff9800; }
+    .activity-card.song-card { border-right: 8px solid #e91e63; }
+    .activity-card.contact-card { border-right: 8px solid #2196f3; }
+
+    /* ===== DETAIL PAGE ===== */
+    #detail-page { display: none; }
+
+    .detail-box {
+      background: white;
+      border-radius: 30px;
+      padding: 20px;
+      margin: 10px 0;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .detail-box .big-icon {
       text-align: center;
-      padding: 15px;
+      font-size: 5em;
+      margin: 10px 0;
     }
 
-    .record-btn {
-      background: #f44336;
+    /* ===== TASK STEPS ===== */
+    .step {
+      background: #fff9c4;
+      border-radius: 20px;
+      padding: 15px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .step:active { transform: scale(0.97); }
+
+    .step .step-icon {
+      font-size: 2.5em;
+      flex-shrink: 0;
+    }
+
+    .step .step-num {
+      background: #ff9800;
       color: white;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      flex-shrink: 0;
+    }
+
+    .step.done {
+      background: #c8e6c9;
+    }
+
+    .step.done::after {
+      content: '✅';
+      font-size: 1.5em;
+      margin-right: auto;
+    }
+
+    /* ===== SONG ===== */
+    .song-big-btn {
+      display: block;
+      width: 120px;
+      height: 120px;
+      margin: 20px auto;
+      background: linear-gradient(135deg, #f44336, #e91e63);
       border: none;
       border-radius: 50%;
-      width: 80px;
-      height: 80px;
-      font-size: 2em;
+      font-size: 3em;
+      color: white;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(244,67,54,0.4);
+      box-shadow: 0 6px 25px rgba(244,67,54,0.4);
       transition: transform 0.2s;
-      margin: 10px;
+      animation: pulse 2s infinite;
     }
 
-    .record-btn.recording {
+    .song-big-btn:active { transform: scale(0.9); }
+
+    .song-emojis {
+      text-align: center;
+      font-size: 2em;
+      margin: 10px 0;
+      animation: dance 1s infinite alternate;
+    }
+
+    @keyframes dance {
+      0% { transform: rotate(-5deg); }
+      100% { transform: rotate(5deg); }
+    }
+
+    /* ===== CONTACT OPTIONS ===== */
+    .contact-grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .contact-big-btn {
+      background: white;
+      border: 4px solid;
+      border-radius: 25px;
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      font-size: 4em;
+    }
+
+    .contact-big-btn:active { transform: scale(0.95); }
+
+    .contact-big-btn.mic-btn { border-color: #f44336; background: #ffebee; }
+    .contact-big-btn.cam-btn { border-color: #4caf50; background: #e8f5e9; }
+    .contact-big-btn.draw-btn { border-color: #9c27b0; background: #f3e5f5; }
+
+    /* ===== RECORDING ===== */
+    .record-big {
+      display: block;
+      margin: 20px auto;
+      width: 100px;
+      height: 100px;
+      background: #f44336;
+      border: none;
+      border-radius: 50%;
+      font-size: 2.5em;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(244,67,54,0.4);
+      transition: transform 0.2s;
+    }
+
+    .record-big:active { transform: scale(0.9); }
+
+    .record-big.recording {
       animation: pulse-red 1s infinite;
       background: #b71c1c;
     }
 
     @keyframes pulse-red {
       0%, 100% { box-shadow: 0 0 0 0 rgba(244,67,54,0.7); }
-      50% { box-shadow: 0 0 0 15px rgba(244,67,54,0); }
+      50% { box-shadow: 0 0 0 20px rgba(244,67,54,0); }
     }
 
-    .play-btn {
+    .play-big {
+      display: block;
+      margin: 15px auto;
+      width: 80px;
+      height: 80px;
       background: #4caf50;
-      color: white;
       border: none;
       border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 1.5em;
+      font-size: 2em;
+      color: white;
       cursor: pointer;
-      margin: 10px;
-      box-shadow: 0 4px 10px rgba(76,175,80,0.3);
+      box-shadow: 0 4px 15px rgba(76,175,80,0.3);
     }
 
-    .upload-area {
-      text-align: center;
-      padding: 20px;
-    }
+    .play-big:active { transform: scale(0.9); }
 
-    .upload-box {
-      background: #f3e5f5;
-      border: 3px dashed #ce93d8;
-      border-radius: 20px;
-      padding: 30px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .upload-box:hover {
-      background: #e1bee7;
-    }
-
-    .upload-box .upload-icon {
-      font-size: 3em;
+    /* ===== PHOTO ===== */
+    .photo-upload-btn {
       display: block;
-      margin-bottom: 10px;
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      background: #e8f5e9;
+      border: 5px dashed #4caf50;
+      border-radius: 30px;
+      font-size: 4em;
+      cursor: pointer;
+      transition: transform 0.2s;
+      text-align: center;
+      line-height: 140px;
     }
+
+    .photo-upload-btn:active { transform: scale(0.95); }
 
     .preview-img {
       max-width: 100%;
-      border-radius: 15px;
-      margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      border-radius: 20px;
+      margin: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
     }
 
-    .drawing-area {
-      text-align: center;
-    }
-
+    /* ===== DRAWING ===== */
     .canvas-container {
       background: white;
-      border-radius: 15px;
-      border: 3px solid #ce93d8;
+      border-radius: 20px;
+      border: 4px solid #ce93d8;
       overflow: hidden;
       margin: 10px 0;
       touch-action: none;
@@ -373,296 +402,308 @@
     .color-palette {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       margin: 10px 0;
       flex-wrap: wrap;
     }
 
     .color-btn {
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: 3px solid white;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       transition: transform 0.2s;
     }
 
-    .color-btn:hover, .color-btn.active {
-      transform: scale(1.2);
+    .color-btn:active, .color-btn.active {
+      transform: scale(1.3);
       border-color: #333;
     }
 
     .canvas-actions {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 15px;
       margin: 10px 0;
     }
 
-    .canvas-action-btn {
-      background: #e1f5fe;
-      border: 2px solid #03a9f4;
-      border-radius: 15px;
-      padding: 8px 20px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 1em;
+    .icon-action-btn {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: 3px solid;
+      font-size: 1.5em;
       cursor: pointer;
-      color: #01579b;
-      font-weight: 600;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .success-msg {
-      background: #c8e6c9;
-      color: #2e7d32;
-      padding: 12px;
-      border-radius: 15px;
-      text-align: center;
-      margin: 10px 0;
-      font-weight: 600;
-      display: none;
+    .icon-action-btn:active { transform: scale(0.9); }
+
+    .icon-action-btn.delete-btn { background: #ffebee; border-color: #f44336; }
+    .icon-action-btn.save-btn { background: #e8f5e9; border-color: #4caf50; }
+
+    /* ===== SUCCESS ANIMATION ===== */
+    .success-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.3s;
     }
 
-    .encouragement {
+    .success-overlay .success-content {
+      background: white;
+      border-radius: 30px;
+      padding: 40px;
       text-align: center;
-      font-size: 1.2em;
-      color: #e91e63;
-      margin: 15px 0;
-      padding: 15px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 20px;
+      font-size: 4em;
+      animation: popIn 0.5s;
     }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
     .footer {
       text-align: center;
-      padding: 20px;
-      color: #795548;
-      font-size: 0.85em;
+      padding: 15px;
+      font-size: 1.5em;
     }
+
+    /* ===== SPEAKING INDICATOR ===== */
+    .speaking-indicator {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #7c4dff, #e040fb);
+      color: white;
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-size: 1.5em;
+      z-index: 50;
+      display: none;
+      animation: fadeIn 0.3s;
+      box-shadow: 0 4px 15px rgba(124,77,255,0.4);
+    }
+
+    .speaking-indicator.active { display: block; }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>🌻 גן דגנית</h1>
-    <p>הגן שלנו בבית 💛</p>
-  </div>
+  <!-- SPEAKING INDICATOR -->
+  <div class="speaking-indicator" id="speakingIndicator">🔊</div>
+
+  <div class="header">🌻🏠💛</div>
 
   <div class="container">
 
     <!-- ===== DAYS PAGE ===== -->
     <div id="days-page">
-      <div class="greeting">
-        <div>שלום ילדים יקרים! 🤗</div>
-        <div>בואו נבחר את היום שלנו</div>
+      <div class="speak-hint">
+        <button class="speak-btn" onclick="speak('שלום ילדים! בואו נבחר את היום שלנו! תלחצו על היום של היום!')">🔊</button>
       </div>
 
-      <div class="days-grid">
-        <button class="day-btn" onclick="selectDay(0)">
-          <span class="emoji">🌞</span>
-          יום ראשון
-        </button>
-        <button class="day-btn" onclick="selectDay(1)">
-          <span class="emoji">🌈</span>
-          יום שני
-        </button>
-        <button class="day-btn" onclick="selectDay(2)">
-          <span class="emoji">🌺</span>
-          יום שלישי
-        </button>
-        <button class="day-btn" onclick="selectDay(3)">
-          <span class="emoji">🦋</span>
-          יום רביעי
-        </button>
-        <button class="day-btn" onclick="selectDay(4)">
-          <span class="emoji">⭐</span>
-          יום חמישי
-        </button>
-        <button class="day-btn" onclick="selectDay(5)">
-          <span class="emoji">🎉</span>
-          יום שישי
-        </button>
-        <button class="day-btn" onclick="selectDay(6)">
-          <span class="emoji">🕊️</span>
-          שבת
-        </button>
-      </div>
+      <div class="days-grid" id="daysGrid"></div>
     </div>
 
     <!-- ===== ACTIVITIES PAGE ===== -->
     <div id="activities-page">
-      <button class="back-btn" onclick="goBack('days')">⟵ חזרה לימים</button>
-      <div class="day-title" id="day-title"></div>
+      <button class="back-btn" onclick="goBack('days')">🔙</button>
+      <div class="day-header" id="dayHeader"></div>
 
-      <div class="encouragement" id="daily-encouragement"></div>
-
-      <div class="activity-card" onclick="openActivity('task')">
-        <div class="icon">🎯</div>
-        <h3>המשימה שלי להיום</h3>
-        <p id="task-preview"></p>
+      <div class="speak-hint">
+        <button class="speak-btn" id="activitiesSpeakBtn">🔊</button>
       </div>
 
-      <div class="activity-card" onclick="openActivity('song')">
-        <div class="icon">🎵</div>
-        <h3>שיר אהוב</h3>
-        <p id="song-preview"></p>
-      </div>
+      <div class="activities-grid">
+        <div class="activity-card task-card" onclick="openActivity('task')">
+          <span class="card-icon" id="taskCardIcon">🎯</span>
+          <span class="card-visual" id="taskCardVisual"></span>
+        </div>
 
-      <div class="activity-card" onclick="openActivity('contact')">
-        <div class="icon">💌</div>
-        <h3>אני שומר על קשר</h3>
-        <p>שולחים חיבוק לחברים מהגן!</p>
+        <div class="activity-card song-card" onclick="openActivity('song')">
+          <span class="card-icon">🎵</span>
+          <span class="card-visual">🎤 🎶 🎸 💃</span>
+        </div>
+
+        <div class="activity-card contact-card" onclick="openActivity('contact')">
+          <span class="card-icon">💌</span>
+          <span class="card-visual">👫 🤗 ❤️</span>
+        </div>
       </div>
     </div>
 
     <!-- ===== DETAIL PAGE ===== -->
     <div id="detail-page">
-      <button class="back-btn" id="detail-back-btn">⟵ חזרה</button>
+      <button class="back-btn" id="detailBackBtn">🔙</button>
       <div id="detail-content"></div>
     </div>
 
   </div>
 
-  <div class="footer">
-    🌻 גן דגנית - כי גם בבית אנחנו ביחד 💛
-  </div>
+  <div class="footer">🌻💛🕊️</div>
 
 <script>
 // ===== DATA =====
 const DAYS = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת'];
 const DAY_EMOJIS = ['🌞', '🌈', '🌺', '🦋', '⭐', '🎉', '🕊️'];
+// Number dots per day (1-7) for visual day identification
+const DAY_DOTS = [1, 2, 3, 4, 5, 6, 7];
 
 const ENCOURAGEMENTS = [
-  'היום הולך להיות יום מדהים! אתם גיבורים! 💪',
-  'כמה כיף שאתם כאן! בואו נעשה דברים יפים! 🌟',
-  'אתם הילדים הכי מיוחדים! יום נפלא מחכה לנו! 🌈',
-  'וואו, איזה יום מרגש! מוכנים להרפתקה? 🚀',
-  'אתם כוכבים זוהרים! בואו נתחיל! ⭐',
-  'שישי שמח! יום של שמחה וחיוכים! 😊',
-  'שבת שלום! יום של מנוחה ומשחקים! 🕊️'
+  'שלום ילדים! היום יום ראשון! יום של כיף!',
+  'שלום ילדים! היום יום שני! יום מיוחד!',
+  'שלום ילדים! היום יום שלישי! יום נפלא!',
+  'שלום ילדים! היום יום רביעי! יום של שמחה!',
+  'שלום ילדים! היום יום חמישי! כמעט סוף שבוע!',
+  'שלום ילדים! היום יום שישי! שישי שמח!',
+  'שלום ילדים! היום שבת! שבת שלום!'
 ];
 
 const DAILY_TASKS = [
   {
-    title: 'בונים מאורה מבשמיכות!',
+    title: 'בונים בית משמיכות!',
     icon: '🏰',
-    instructions: [
-      'קחו שמיכות גדולות מהארון',
-      'שימו כיסאות בשורה',
-      'פרשו את השמיכות מעל הכיסאות',
-      'שימו כריות בפנים - זה הבית שלכם!',
-      'קחו פנס ושחקו בפנים!'
+    spokenTitle: 'היום בונים בית משמיכות!',
+    steps: [
+      { icon: '🛏️', speak: 'קחו שמיכות גדולות' },
+      { icon: '🪑', speak: 'שימו כיסאות בשורה' },
+      { icon: '⛺', speak: 'פרשו שמיכה מעל הכיסאות' },
+      { icon: '🛋️', speak: 'שימו כריות בפנים' },
+      { icon: '🔦', speak: 'קחו פנס ושחקו בפנים!' }
     ],
-    tip: 'אפשר לקחת צעצועים אהובים למאורה!'
+    visualEmojis: '🛏️ 🪑 ⛺'
   },
   {
-    title: 'משחק הרכבה מקופסאות!',
+    title: 'בונים מקופסאות!',
     icon: '📦',
-    instructions: [
-      'אספו קופסאות מהמטבח (קופסת חלב, דגנים)',
-      'קחו דבק או סלוטייפ',
-      'נסו לבנות מגדל גבוה!',
-      'או רובוט! או מכונית!',
-      'צבעו את היצירה שלכם'
+    spokenTitle: 'היום בונים דברים מקופסאות!',
+    steps: [
+      { icon: '📦', speak: 'אספו קופסאות' },
+      { icon: '🧴', speak: 'קחו דבק או סלוטייפ' },
+      { icon: '🏗️', speak: 'בנו מגדל גבוה!' },
+      { icon: '🤖', speak: 'או רובוט! או מכונית!' },
+      { icon: '🖍️', speak: 'צבעו את מה שבניתם' }
     ],
-    tip: 'אפשר להוסיף פקקים ככפתורים!'
+    visualEmojis: '📦 🏗️ 🤖'
   },
   {
-    title: 'מסלול מכשולים בסלון!',
+    title: 'מסלול מכשולים!',
     icon: '🏃',
-    instructions: [
-      'שימו כריות על הרצפה - אלה "אבנים"',
-      'עברו מכרית לכרית בלי לגעת ברצפה!',
-      'שימו שמיכה כמנהרה מתחת לשולחן',
-      'זחלו מתחת לשמיכה',
-      'בסוף - קפצו 3 קפיצות של ניצחון!'
+    spokenTitle: 'היום עושים מסלול מכשולים בסלון!',
+    steps: [
+      { icon: '🛋️', speak: 'שימו כריות על הרצפה' },
+      { icon: '🦘', speak: 'קפצו מכרית לכרית!' },
+      { icon: '🫧', speak: 'זחלו מתחת לשולחן' },
+      { icon: '🏃', speak: 'רוצו עד הסוף!' },
+      { icon: '🎉', speak: 'קפצו שלוש קפיצות של ניצחון!' }
     ],
-    tip: 'אפשר לעשות את המסלול עם אח/אחות!'
+    visualEmojis: '🛋️ 🦘 🏃'
   },
   {
-    title: 'בישול ביחד - כדורי שוקולד!',
+    title: 'עושים כדורי שוקולד!',
     icon: '🍫',
-    instructions: [
-      'בקשו מאמא/אבא ביסקוויטים ושוקולד',
-      'שברו את הביסקוויטים לפירורים',
-      'הוסיפו שוקולד מומס',
-      'גלגלו כדורים עם הידיים',
-      'שימו בהקפאה וחכו!'
+    spokenTitle: 'היום מכינים כדורי שוקולד! תביאו אמא או אבא!',
+    steps: [
+      { icon: '🍪', speak: 'בקשו ביסקוויטים מאמא או אבא' },
+      { icon: '💥', speak: 'שברו את הביסקוויטים לפירורים' },
+      { icon: '🍫', speak: 'תוסיפו שוקולד' },
+      { icon: '🤲', speak: 'גלגלו כדורים עם הידיים' },
+      { icon: '❄️', speak: 'שימו בהקפאה וחכו!' }
     ],
-    tip: 'אפשר לגלגל בקוקוס או סוכריות!'
+    visualEmojis: '🍪 🍫 🤲'
   },
   {
-    title: 'חנות בבית!',
+    title: 'משחקים חנות!',
     icon: '🛒',
-    instructions: [
-      'אספו צעצועים ודברים מהבית',
-      'סדרו אותם על שולחן כמו חנות',
-      'הכינו "כסף" מנייר',
-      'אחד מוכר ואחד קונה',
-      'אל תשכחו לומר "תודה" ו"בבקשה"!'
+    spokenTitle: 'היום משחקים חנות בבית!',
+    steps: [
+      { icon: '🧸', speak: 'אספו צעצועים מהבית' },
+      { icon: '🛍️', speak: 'סדרו אותם על שולחן כמו חנות' },
+      { icon: '💵', speak: 'הכינו כסף מנייר' },
+      { icon: '🤝', speak: 'אחד מוכר ואחד קונה' },
+      { icon: '😊', speak: 'תגידו תודה ובבקשה!' }
     ],
-    tip: 'אפשר להכין שלטי מחיר!'
+    visualEmojis: '🧸 🛍️ 🤝'
   },
   {
     title: 'יצירה מפלסטלינה!',
     icon: '🎨',
-    instructions: [
-      'קחו פלסטלינה בצבעים שונים',
-      'נסו לעשות: פרח, חיה, או אוכל',
-      'ערבבו צבעים ליצירת צבע חדש',
-      'הכינו משפחה שלמה מפלסטלינה',
-      'ספרו סיפור על המשפחה!'
+    spokenTitle: 'היום עושים יצירה מפלסטלינה!',
+    steps: [
+      { icon: '🎨', speak: 'קחו פלסטלינה בצבעים' },
+      { icon: '🌸', speak: 'עשו פרח!' },
+      { icon: '🐱', speak: 'או חיה!' },
+      { icon: '👨‍👩‍👧‍👦', speak: 'הכינו משפחה שלמה' },
+      { icon: '📖', speak: 'ספרו סיפור עליהם!' }
     ],
-    tip: 'אפשר להכין פלסטלינה ביתית מקמח ומלח!'
+    visualEmojis: '🎨 🌸 🐱'
   },
   {
-    title: 'יום מנוחה - מגדל קלפים!',
+    title: 'בונים מגדל!',
     icon: '🃏',
-    instructions: [
-      'קחו קלפים או קופסאות קטנות',
-      'נסו לבנות מגדל - בזהירות!',
-      'כמה קומות הצלחתם?',
-      'אם נפל - לא נורא! מתחילים שוב!',
-      'צלמו את המגדל הכי גבוה שבניתם!'
+    spokenTitle: 'שבת שלום! היום בונים מגדל מקלפים או קוביות!',
+    steps: [
+      { icon: '🃏', speak: 'קחו קלפים או קוביות' },
+      { icon: '🏗️', speak: 'בנו מגדל לאט לאט' },
+      { icon: '📏', speak: 'כמה גבוה הצלחתם?' },
+      { icon: '💨', speak: 'אם נפל, לא נורא! נסו שוב!' },
+      { icon: '📸', speak: 'צלמו את המגדל!' }
     ],
-    tip: 'אפשר גם עם קוביות או ספרים!'
+    visualEmojis: '🃏 🏗️ 📸'
   }
 ];
 
 const DAILY_SONGS = [
   {
     title: 'דביבון הולך לגן',
-    lyrics: 'דביבון הולך לגן\nשם יש לו הרבה חן\nמשחק עם כל חברים\nשר שירים ומספרים',
+    spoken: 'בואו נשמע את השיר: דביבון הולך לגן!',
+    emojis: '🦝 🏫 🎵',
     youtube: 'https://www.youtube.com/results?search_query=דביבון+הולך+לגן+שיר+ילדים'
   },
   {
     title: 'ראש כתפיים ברכיים',
-    lyrics: 'ראש, כתפיים, ברכיים, אצבעות\nברכיים, אצבעות\nברכיים, אצבעות\nראש, כתפיים, ברכיים, אצבעות\nעיניים, אוזניים, פה!',
+    spoken: 'בואו נשמע את השיר: ראש כתפיים ברכיים אצבעות! קומו ותזוזו!',
+    emojis: '🙆 💪 🦵',
     youtube: 'https://www.youtube.com/results?search_query=ראש+כתפיים+ברכיים+אצבעות+ילדים'
   },
   {
     title: 'אם אתה שמח',
-    lyrics: 'אם אתה שמח ואתה יודע\nתמחא כפיים!\nאם אתה שמח ואתה יודע\nתמחא כפיים!\nאם אתה שמח ואתה יודע\nוגם רוצה להראות\nאם אתה שמח ואתה יודע\nתמחא כפיים!',
+    spoken: 'בואו נשמע את השיר: אם אתה שמח ואתה יודע! תמחאו כפיים!',
+    emojis: '😊 👏 🎵',
     youtube: 'https://www.youtube.com/results?search_query=אם+אתה+שמח+שיר+ילדים'
   },
   {
     title: 'יונתן הקטן',
-    lyrics: 'יונתן הקטן\nרץ עם הרוח\nיונתן הקטן\nליבו פתוח',
+    spoken: 'בואו נשמע את השיר: יונתן הקטן!',
+    emojis: '👦 🌬️ 🎵',
     youtube: 'https://www.youtube.com/results?search_query=יונתן+הקטן+שיר+ילדים'
   },
   {
     title: 'שיר הגשם',
-    lyrics: 'טיף טיף טיף טוף טוף טוף\nהגשם כבר בחוץ\nטיף טיף טיף טוף טוף טוף\nנרקוד גם בחוץ!',
+    spoken: 'בואו נשמע שיר על גשם! טיף טיף טוף!',
+    emojis: '🌧️ ☔ 💧',
     youtube: 'https://www.youtube.com/results?search_query=טיף+טיף+טוף+שיר+גשם+ילדים'
   },
   {
     title: 'שבת שלום',
-    lyrics: 'שבת שלום שבת שלום\nשבת שבת שבת שלום\nהנרות דולקים\nהשולחן ערוך\nשבת שלום!',
+    spoken: 'בואו נשמע שיר שבת שלום!',
+    emojis: '🕯️ 🍷 ✨',
     youtube: 'https://www.youtube.com/results?search_query=שבת+שלום+שיר+ילדים'
   },
   {
-    title: 'כולם אוהבים שבת',
-    lyrics: 'כולם אוהבים את השבת\nכולם אוהבים לנוח\nכולם אוהבים את השבת\nיום של אושר ושמחה!',
+    title: 'שירי שבת',
+    spoken: 'שבת שלום! בואו נשמע שירי שבת!',
+    emojis: '🕊️ 🕯️ 💛',
     youtube: 'https://www.youtube.com/results?search_query=שירי+שבת+לילדים'
   }
 ];
@@ -674,29 +715,68 @@ let recordedAudioURL = null;
 let isRecording = false;
 let drawingColor = '#e91e63';
 
-// Highlight today
-function highlightToday() {
+// ===== TEXT TO SPEECH =====
+function speak(text) {
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'he-IL';
+  utterance.rate = 0.85;
+  utterance.pitch = 1.1;
+
+  const indicator = document.getElementById('speakingIndicator');
+  indicator.classList.add('active');
+  utterance.onend = () => indicator.classList.remove('active');
+  utterance.onerror = () => indicator.classList.remove('active');
+
+  window.speechSynthesis.speak(utterance);
+}
+
+// ===== BUILD DAYS GRID =====
+function buildDaysGrid() {
+  const grid = document.getElementById('daysGrid');
   const today = new Date().getDay();
-  const buttons = document.querySelectorAll('.day-btn');
-  buttons.forEach((btn, i) => {
-    if (i === today) {
-      btn.classList.add('today');
+
+  DAYS.forEach((day, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'day-btn' + (i === today ? ' today' : '');
+    btn.onclick = () => selectDay(i);
+
+    const emojiSpan = document.createElement('span');
+    emojiSpan.className = 'day-emoji';
+    emojiSpan.textContent = DAY_EMOJIS[i];
+    btn.appendChild(emojiSpan);
+
+    // Visual dots to show day number (1-7)
+    const dotsDiv = document.createElement('div');
+    dotsDiv.className = 'day-dots';
+    for (let d = 0; d < DAY_DOTS[i]; d++) {
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dotsDiv.appendChild(dot);
     }
+    btn.appendChild(dotsDiv);
+
+    grid.appendChild(btn);
   });
 }
 
 function selectDay(dayIndex) {
   currentDay = dayIndex;
-  document.getElementById('day-title').textContent = DAY_EMOJIS[dayIndex] + ' ' + DAYS[dayIndex];
-  document.getElementById('daily-encouragement').textContent = ENCOURAGEMENTS[dayIndex];
-  document.getElementById('task-preview').textContent = DAILY_TASKS[dayIndex].title;
-  document.getElementById('song-preview').textContent = '🎵 ' + DAILY_SONGS[dayIndex].title;
+  document.getElementById('dayHeader').textContent = DAY_EMOJIS[dayIndex];
+  document.getElementById('taskCardIcon').textContent = DAILY_TASKS[dayIndex].icon;
+  document.getElementById('taskCardVisual').textContent = DAILY_TASKS[dayIndex].visualEmojis;
+
+  const speakBtn = document.getElementById('activitiesSpeakBtn');
+  speakBtn.onclick = () => speak(ENCOURAGEMENTS[dayIndex] + ' יש לנו משימה, שיר, ואפשר גם לשלוח חיבוק לחברים!');
 
   document.getElementById('days-page').style.display = 'none';
   document.getElementById('activities-page').style.display = 'block';
+
+  speak(ENCOURAGEMENTS[dayIndex]);
 }
 
 function goBack(target) {
+  window.speechSynthesis.cancel();
   if (target === 'days') {
     document.getElementById('days-page').style.display = 'block';
     document.getElementById('activities-page').style.display = 'none';
@@ -708,137 +788,141 @@ function goBack(target) {
 }
 
 function openActivity(type) {
-  const detailContent = document.getElementById('detail-content');
-  const backBtn = document.getElementById('detail-back-btn');
+  const content = document.getElementById('detail-content');
+  const backBtn = document.getElementById('detailBackBtn');
   backBtn.onclick = () => goBack('activities');
 
   if (type === 'task') {
     const task = DAILY_TASKS[currentDay];
-    detailContent.innerHTML = `
-      <div class="detail-content">
-        <div class="task-icon">${task.icon}</div>
-        <h2>${task.title}</h2>
-        <div class="instructions">
-          <ul>
-            ${task.instructions.map(i => `<li>${i}</li>`).join('')}
-          </ul>
+    let stepsHTML = task.steps.map((step, i) => `
+      <div class="step" onclick="speakStep(this, '${step.speak.replace(/'/g, "\\'")}')">
+        <span class="step-num">${i + 1 <= 5 ? ['①','②','③','④','⑤'][i] : i+1}</span>
+        <span class="step-icon">${step.icon}</span>
+      </div>
+    `).join('');
+
+    content.innerHTML = `
+      <div class="detail-box">
+        <div class="big-icon">${task.icon}</div>
+        <div class="speak-hint">
+          <button class="speak-btn" onclick="speak('${task.spokenTitle.replace(/'/g, "\\'")}')">🔊</button>
         </div>
-        <div class="encouragement">💡 טיפ: ${task.tip}</div>
+        ${stepsHTML}
       </div>
     `;
+
+    speak(task.spokenTitle);
+
   } else if (type === 'song') {
     const song = DAILY_SONGS[currentDay];
-    detailContent.innerHTML = `
-      <div class="detail-content">
-        <div class="song-player">
-          <div class="task-icon">🎵</div>
-          <div class="song-title">${song.title}</div>
-          <div class="song-lyrics">${song.lyrics}</div>
-          <a href="${song.youtube}" target="_blank" class="youtube-link">
-            ▶️ שמעו את השיר
-          </a>
-        </div>
+    content.innerHTML = `
+      <div class="detail-box">
+        <div class="big-icon">🎵</div>
+        <div class="song-emojis">${song.emojis}</div>
+        <a href="${song.youtube}" target="_blank" style="text-decoration:none;">
+          <button class="song-big-btn" type="button">▶️</button>
+        </a>
+        <div class="song-emojis">🎶 🎵 🎶</div>
       </div>
     `;
+
+    speak(song.spoken);
+
   } else if (type === 'contact') {
-    detailContent.innerHTML = `
-      <div class="detail-content">
-        <div class="task-icon">💌</div>
-        <h2>אני שומר על קשר!</h2>
-        <p style="text-align:center; color:#795548; margin-bottom:15px;">
-          שולחים חיבוק לחברים מהגן 🤗
-        </p>
-        <div class="contact-options">
-          <button class="contact-btn" onclick="openContactOption('record')">
-            <span class="btn-icon">🎤</span>
-            מקליטים הודעה לחברים
-          </button>
-          <button class="contact-btn" onclick="openContactOption('photo')">
-            <span class="btn-icon">📸</span>
-            שולחים תמונה שלי
-          </button>
-          <button class="contact-btn" onclick="openContactOption('draw')">
-            <span class="btn-icon">🎨</span>
-            שולחים ציור שציירתי
-          </button>
+    content.innerHTML = `
+      <div class="detail-box">
+        <div class="big-icon">💌</div>
+        <div class="speak-hint">
+          <button class="speak-btn" onclick="speak('בואו נשלח חיבוק לחברים מהגן! אפשר להקליט הודעה, לצלם תמונה, או לצייר ציור!')">🔊</button>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-big-btn mic-btn" onclick="openContactOption('record')">🎤</div>
+          <div class="contact-big-btn cam-btn" onclick="openContactOption('photo')">📸</div>
+          <div class="contact-big-btn draw-btn" onclick="openContactOption('draw')">🎨</div>
         </div>
       </div>
     `;
+
+    speak('בואו נשלח חיבוק לחברים! מה רוצים לעשות? להקליט, לצלם, או לצייר?');
   }
 
   document.getElementById('activities-page').style.display = 'none';
   document.getElementById('detail-page').style.display = 'block';
 }
 
+function speakStep(el, text) {
+  speak(text);
+  el.classList.add('done');
+}
+
 function openContactOption(option) {
-  const detailContent = document.getElementById('detail-content');
+  const content = document.getElementById('detail-content');
 
   if (option === 'record') {
-    detailContent.innerHTML = `
-      <div class="detail-content">
-        <div class="task-icon">🎤</div>
-        <h2>מקליטים הודעה לחברים!</h2>
-        <div class="record-area">
-          <p style="color:#795548; margin-bottom:15px;">לחצו על הכפתור האדום והתחילו לדבר!</p>
-          <button class="record-btn" id="recordBtn" onclick="toggleRecording()">🎤</button>
-          <p id="recordStatus" style="color:#e91e63; font-weight:600;"></p>
-          <div id="playbackArea" style="display:none; margin-top:15px;">
-            <p style="color:#4caf50; font-weight:600;">ההקלטה מוכנה! 🎉</p>
-            <button class="play-btn" id="playBtn" onclick="playRecording()">▶️</button>
-            <br>
-            <button class="canvas-action-btn" onclick="downloadRecording()" style="margin-top:10px;">
-              💾 שמור הקלטה
-            </button>
-          </div>
-          <div class="success-msg" id="recordSuccess">ההודעה נשמרה! החברים ישמחו לשמוע! 🎉</div>
+    content.innerHTML = `
+      <div class="detail-box">
+        <div class="big-icon">🎤</div>
+        <div class="speak-hint">
+          <button class="speak-btn" onclick="speak('לחצו על הכפתור האדום ודברו! ספרו לחברים מה עשיתם היום!')">🔊</button>
+        </div>
+        <button class="record-big" id="recordBtn" onclick="toggleRecording()">🎤</button>
+        <div id="playbackArea" style="display:none; text-align:center;">
+          <button class="play-big" onclick="playRecording()">▶️</button>
         </div>
       </div>
     `;
+    speak('לחצו על הכפתור האדום ודברו! ספרו לחברים מה עשיתם היום!');
+
   } else if (option === 'photo') {
-    detailContent.innerHTML = `
-      <div class="detail-content">
-        <div class="task-icon">📸</div>
-        <h2>שולחים תמונה!</h2>
-        <div class="upload-area">
-          <div class="upload-box" onclick="document.getElementById('photoInput').click()">
-            <span class="upload-icon">📷</span>
-            <p style="color:#7b1fa2; font-weight:600;">לחצו כאן לצלם או לבחור תמונה!</p>
-          </div>
-          <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" onchange="previewPhoto(this)">
-          <img id="photoPreview" class="preview-img" style="display:none;">
-          <div id="photoActions" style="display:none; margin-top:15px;">
-            <button class="canvas-action-btn" onclick="downloadPhoto()">💾 שמור תמונה</button>
-          </div>
-          <div class="success-msg" id="photoSuccess">התמונה נשמרה! איזה יופי! 📸🎉</div>
+    content.innerHTML = `
+      <div class="detail-box">
+        <div class="big-icon">📸</div>
+        <div class="speak-hint">
+          <button class="speak-btn" onclick="speak('לחצו על המצלמה לצלם תמונה יפה!')">🔊</button>
         </div>
+        <div class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">📷</div>
+        <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" onchange="previewPhoto(this)">
+        <img id="photoPreview" class="preview-img" style="display:none;">
       </div>
     `;
+    speak('לחצו על המצלמה לצלם תמונה יפה!');
+
   } else if (option === 'draw') {
-    detailContent.innerHTML = `
-      <div class="detail-content">
-        <div class="task-icon">🎨</div>
-        <h2>מציירים ציור לחברים!</h2>
-        <div class="drawing-area">
-          <div class="color-palette" id="colorPalette"></div>
-          <div class="canvas-container">
-            <canvas id="drawingCanvas" width="400" height="350"></canvas>
-          </div>
-          <div class="canvas-actions">
-            <button class="canvas-action-btn" onclick="clearCanvas()">🗑️ מחיקה</button>
-            <button class="canvas-action-btn" onclick="downloadDrawing()">💾 שמירה</button>
-          </div>
-          <div class="success-msg" id="drawSuccess">הציור נשמר! איזה אמן/ית! 🎨🎉</div>
+    content.innerHTML = `
+      <div class="detail-box">
+        <div class="big-icon">🎨</div>
+        <div class="speak-hint">
+          <button class="speak-btn" onclick="speak('בחרו צבע וציירו ציור יפה לחברים!')">🔊</button>
+        </div>
+        <div class="color-palette" id="colorPalette"></div>
+        <div class="canvas-container">
+          <canvas id="drawingCanvas" width="400" height="350"></canvas>
+        </div>
+        <div class="canvas-actions">
+          <button class="icon-action-btn delete-btn" onclick="clearCanvas()">🗑️</button>
+          <button class="icon-action-btn save-btn" onclick="downloadDrawing()">💾</button>
         </div>
       </div>
     `;
     initCanvas();
+    speak('בחרו צבע וציירו ציור יפה לחברים!');
   }
+}
+
+// ===== SUCCESS POPUP =====
+function showSuccess(emoji) {
+  const overlay = document.createElement('div');
+  overlay.className = 'success-overlay';
+  overlay.innerHTML = `<div class="success-content">${emoji}<br>🎉</div>`;
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+  speak('כל הכבוד! יופי!');
+  setTimeout(() => overlay.remove(), 2500);
 }
 
 // ===== RECORDING =====
 async function toggleRecording() {
   const btn = document.getElementById('recordBtn');
-  const status = document.getElementById('recordStatus');
 
   if (!isRecording) {
     try {
@@ -852,22 +936,22 @@ async function toggleRecording() {
         recordedAudioURL = URL.createObjectURL(blob);
         document.getElementById('playbackArea').style.display = 'block';
         stream.getTracks().forEach(track => track.stop());
+        showSuccess('🎤');
       };
 
       mediaRecorder.start();
       isRecording = true;
       btn.classList.add('recording');
       btn.textContent = '⏹️';
-      status.textContent = 'מקליטים... דברו! 🎙️';
+      speak('מקליטים! דברו!');
     } catch (err) {
-      status.textContent = 'צריך לאשר גישה למיקרופון 🎤';
+      speak('צריך לאשר את המיקרופון');
     }
   } else {
     mediaRecorder.stop();
     isRecording = false;
     btn.classList.remove('recording');
     btn.textContent = '🎤';
-    status.textContent = '';
   }
 }
 
@@ -875,16 +959,6 @@ function playRecording() {
   if (recordedAudioURL) {
     const audio = new Audio(recordedAudioURL);
     audio.play();
-  }
-}
-
-function downloadRecording() {
-  if (recordedAudioURL) {
-    const a = document.createElement('a');
-    a.href = recordedAudioURL;
-    a.download = `הודעה-לחברים-${DAYS[currentDay]}.webm`;
-    a.click();
-    document.getElementById('recordSuccess').style.display = 'block';
   }
 }
 
@@ -896,20 +970,9 @@ function previewPhoto(input) {
       const preview = document.getElementById('photoPreview');
       preview.src = e.target.result;
       preview.style.display = 'block';
-      document.getElementById('photoActions').style.display = 'block';
+      showSuccess('📸');
     };
     reader.readAsDataURL(input.files[0]);
-  }
-}
-
-function downloadPhoto() {
-  const preview = document.getElementById('photoPreview');
-  if (preview.src) {
-    const a = document.createElement('a');
-    a.href = preview.src;
-    a.download = `תמונה-${DAYS[currentDay]}.jpg`;
-    a.click();
-    document.getElementById('photoSuccess').style.display = 'block';
   }
 }
 
@@ -922,10 +985,7 @@ function initCanvas() {
     const btn = document.createElement('button');
     btn.className = 'color-btn' + (color === drawingColor ? ' active' : '');
     btn.style.background = color;
-    if (color === '#ffffff') {
-      btn.style.border = '3px solid #ccc';
-      btn.title = 'מחק';
-    }
+    if (color === '#ffffff') btn.style.border = '3px solid #ccc';
     btn.onclick = () => {
       drawingColor = color;
       document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -936,42 +996,27 @@ function initCanvas() {
 
   const canvas = document.getElementById('drawingCanvas');
   const ctx = canvas.getContext('2d');
-
-  // Set canvas size
   const rect = canvas.parentElement.getBoundingClientRect();
   canvas.width = rect.width;
   canvas.height = 350;
-
-  // Fill white background
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   let drawing = false;
-  let lastX = 0;
-  let lastY = 0;
+  let lastX = 0, lastY = 0;
 
   function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    if (e.touches) {
-      return {
-        x: (e.touches[0].clientX - rect.left) * scaleX,
-        y: (e.touches[0].clientY - rect.top) * scaleY
-      };
-    }
-    return {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY
-    };
+    const r = canvas.getBoundingClientRect();
+    const sx = canvas.width / r.width, sy = canvas.height / r.height;
+    if (e.touches) return { x: (e.touches[0].clientX - r.left) * sx, y: (e.touches[0].clientY - r.top) * sy };
+    return { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sy };
   }
 
   function startDraw(e) {
     e.preventDefault();
     drawing = true;
     const pos = getPos(e);
-    lastX = pos.x;
-    lastY = pos.y;
+    lastX = pos.x; lastY = pos.y;
   }
 
   function draw(e) {
@@ -982,17 +1027,14 @@ function initCanvas() {
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(pos.x, pos.y);
     ctx.strokeStyle = drawingColor;
-    ctx.lineWidth = drawingColor === '#ffffff' ? 20 : 5;
+    ctx.lineWidth = drawingColor === '#ffffff' ? 25 : 8;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.stroke();
-    lastX = pos.x;
-    lastY = pos.y;
+    lastX = pos.x; lastY = pos.y;
   }
 
-  function stopDraw() {
-    drawing = false;
-  }
+  function stopDraw() { drawing = false; }
 
   canvas.addEventListener('mousedown', startDraw);
   canvas.addEventListener('mousemove', draw);
@@ -1008,19 +1050,20 @@ function clearCanvas() {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  speak('מחקנו! אפשר לצייר מחדש!');
 }
 
 function downloadDrawing() {
   const canvas = document.getElementById('drawingCanvas');
   const a = document.createElement('a');
   a.href = canvas.toDataURL('image/png');
-  a.download = `ציור-לחברים-${DAYS[currentDay]}.png`;
+  a.download = 'drawing.png';
   a.click();
-  document.getElementById('drawSuccess').style.display = 'block';
+  showSuccess('🎨');
 }
 
-// Init
-highlightToday();
+// ===== INIT =====
+buildDaysGrid();
 </script>
 </body>
 </html>
