@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌻 גן דגנית - הגן שלנו בבית</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: linear-gradient(135deg, #fff9c4 0%, #f8bbd0 50%, #b3e5fc 100%);
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #ff9800, #f44336, #e91e63);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .header h1 {
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.1em;
+      margin-top: 5px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+
+    /* ===== DAYS PAGE ===== */
+    #days-page .greeting {
+      text-align: center;
+      font-size: 1.3em;
+      color: #5d4037;
+      margin: 15px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .day-btn {
+      border: none;
+      border-radius: 20px;
+      padding: 20px 10px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.3em;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .day-btn:hover, .day-btn:active {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    .day-btn.today {
+      animation: pulse 2s infinite;
+      border: 3px solid #fff;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .day-btn:nth-child(1) { background: linear-gradient(135deg, #f44336, #e91e63); }
+    .day-btn:nth-child(2) { background: linear-gradient(135deg, #ff9800, #ff5722); }
+    .day-btn:nth-child(3) { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+    .day-btn:nth-child(4) { background: linear-gradient(135deg, #2196f3, #03a9f4); }
+    .day-btn:nth-child(5) { background: linear-gradient(135deg, #9c27b0, #e91e63); }
+    .day-btn:nth-child(6) { background: linear-gradient(135deg, #ff9800, #ffc107); }
+    .day-btn:nth-child(7) { background: linear-gradient(135deg, #607d8b, #9e9e9e); }
+
+    .day-btn .emoji {
+      display: block;
+      font-size: 1.5em;
+      margin-bottom: 5px;
+    }
+
+    /* ===== ACTIVITIES PAGE ===== */
+    #activities-page {
+      display: none;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 50px;
+      padding: 10px 25px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 15px 0;
+      color: #5d4037;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .day-title {
+      text-align: center;
+      font-size: 1.5em;
+      color: #5d4037;
+      margin: 10px 0;
+    }
+
+    .activity-card {
+      background: white;
+      border-radius: 25px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .activity-card:hover {
+      transform: scale(1.02);
+    }
+
+    .activity-card .icon {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .activity-card h3 {
+      text-align: center;
+      color: #5d4037;
+      font-size: 1.2em;
+      margin-bottom: 8px;
+    }
+
+    .activity-card p {
+      text-align: center;
+      color: #795548;
+      font-size: 0.95em;
+      line-height: 1.6;
+    }
+
+    /* ===== DETAIL PAGES ===== */
+    #detail-page {
+      display: none;
+    }
+
+    .detail-content {
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      margin: 15px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .detail-content h2 {
+      text-align: center;
+      color: #e91e63;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+    }
+
+    .detail-content .task-icon {
+      text-align: center;
+      font-size: 4em;
+      margin: 15px 0;
+    }
+
+    .detail-content .instructions {
+      background: #fff9c4;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px 0;
+      line-height: 1.8;
+      font-size: 1.05em;
+      color: #5d4037;
+    }
+
+    .detail-content .instructions li {
+      margin: 8px 0;
+      list-style: none;
+    }
+
+    .detail-content .instructions li::before {
+      content: "⭐ ";
+    }
+
+    .song-player {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .song-player .song-title {
+      font-size: 1.3em;
+      color: #e91e63;
+      margin: 10px 0;
+    }
+
+    .song-player .song-lyrics {
+      background: #f3e5f5;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px 0;
+      line-height: 2;
+      font-size: 1.05em;
+      color: #4a148c;
+      white-space: pre-line;
+    }
+
+    .song-player .youtube-link {
+      display: inline-block;
+      background: #f44336;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1em;
+      margin-top: 15px;
+      box-shadow: 0 3px 10px rgba(244,67,54,0.3);
+    }
+
+    /* ===== KEEP IN TOUCH ===== */
+    .contact-options {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .contact-btn {
+      background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+      border: 2px solid #03a9f4;
+      border-radius: 20px;
+      padding: 18px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.1em;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.2s;
+      color: #01579b;
+      font-weight: 600;
+    }
+
+    .contact-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .contact-btn .btn-icon {
+      font-size: 2em;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .record-area {
+      text-align: center;
+      padding: 15px;
+    }
+
+    .record-btn {
+      background: #f44336;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 2em;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(244,67,54,0.4);
+      transition: transform 0.2s;
+      margin: 10px;
+    }
+
+    .record-btn.recording {
+      animation: pulse-red 1s infinite;
+      background: #b71c1c;
+    }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(244,67,54,0.7); }
+      50% { box-shadow: 0 0 0 15px rgba(244,67,54,0); }
+    }
+
+    .play-btn {
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5em;
+      cursor: pointer;
+      margin: 10px;
+      box-shadow: 0 4px 10px rgba(76,175,80,0.3);
+    }
+
+    .upload-area {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .upload-box {
+      background: #f3e5f5;
+      border: 3px dashed #ce93d8;
+      border-radius: 20px;
+      padding: 30px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .upload-box:hover {
+      background: #e1bee7;
+    }
+
+    .upload-box .upload-icon {
+      font-size: 3em;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .preview-img {
+      max-width: 100%;
+      border-radius: 15px;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .drawing-area {
+      text-align: center;
+    }
+
+    .canvas-container {
+      background: white;
+      border-radius: 15px;
+      border: 3px solid #ce93d8;
+      overflow: hidden;
+      margin: 10px 0;
+      touch-action: none;
+    }
+
+    #drawingCanvas {
+      display: block;
+      width: 100%;
+      cursor: crosshair;
+    }
+
+    .color-palette {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .color-btn {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 3px solid white;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+
+    .color-btn:hover, .color-btn.active {
+      transform: scale(1.2);
+      border-color: #333;
+    }
+
+    .canvas-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .canvas-action-btn {
+      background: #e1f5fe;
+      border: 2px solid #03a9f4;
+      border-radius: 15px;
+      padding: 8px 20px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1em;
+      cursor: pointer;
+      color: #01579b;
+      font-weight: 600;
+    }
+
+    .success-msg {
+      background: #c8e6c9;
+      color: #2e7d32;
+      padding: 12px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 10px 0;
+      font-weight: 600;
+      display: none;
+    }
+
+    .encouragement {
+      text-align: center;
+      font-size: 1.2em;
+      color: #e91e63;
+      margin: 15px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #795548;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🌻 גן דגנית</h1>
+    <p>הגן שלנו בבית 💛</p>
+  </div>
+
+  <div class="container">
+
+    <!-- ===== DAYS PAGE ===== -->
+    <div id="days-page">
+      <div class="greeting">
+        <div>שלום ילדים יקרים! 🤗</div>
+        <div>בואו נבחר את היום שלנו</div>
+      </div>
+
+      <div class="days-grid">
+        <button class="day-btn" onclick="selectDay(0)">
+          <span class="emoji">🌞</span>
+          יום ראשון
+        </button>
+        <button class="day-btn" onclick="selectDay(1)">
+          <span class="emoji">🌈</span>
+          יום שני
+        </button>
+        <button class="day-btn" onclick="selectDay(2)">
+          <span class="emoji">🌺</span>
+          יום שלישי
+        </button>
+        <button class="day-btn" onclick="selectDay(3)">
+          <span class="emoji">🦋</span>
+          יום רביעי
+        </button>
+        <button class="day-btn" onclick="selectDay(4)">
+          <span class="emoji">⭐</span>
+          יום חמישי
+        </button>
+        <button class="day-btn" onclick="selectDay(5)">
+          <span class="emoji">🎉</span>
+          יום שישי
+        </button>
+        <button class="day-btn" onclick="selectDay(6)">
+          <span class="emoji">🕊️</span>
+          שבת
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== ACTIVITIES PAGE ===== -->
+    <div id="activities-page">
+      <button class="back-btn" onclick="goBack('days')">⟵ חזרה לימים</button>
+      <div class="day-title" id="day-title"></div>
+
+      <div class="encouragement" id="daily-encouragement"></div>
+
+      <div class="activity-card" onclick="openActivity('task')">
+        <div class="icon">🎯</div>
+        <h3>המשימה שלי להיום</h3>
+        <p id="task-preview"></p>
+      </div>
+
+      <div class="activity-card" onclick="openActivity('song')">
+        <div class="icon">🎵</div>
+        <h3>שיר אהוב</h3>
+        <p id="song-preview"></p>
+      </div>
+
+      <div class="activity-card" onclick="openActivity('contact')">
+        <div class="icon">💌</div>
+        <h3>אני שומר על קשר</h3>
+        <p>שולחים חיבוק לחברים מהגן!</p>
+      </div>
+    </div>
+
+    <!-- ===== DETAIL PAGE ===== -->
+    <div id="detail-page">
+      <button class="back-btn" id="detail-back-btn">⟵ חזרה</button>
+      <div id="detail-content"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    🌻 גן דגנית - כי גם בבית אנחנו ביחד 💛
+  </div>
+
+<script>
+// ===== DATA =====
+const DAYS = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת'];
+const DAY_EMOJIS = ['🌞', '🌈', '🌺', '🦋', '⭐', '🎉', '🕊️'];
+
+const ENCOURAGEMENTS = [
+  'היום הולך להיות יום מדהים! אתם גיבורים! 💪',
+  'כמה כיף שאתם כאן! בואו נעשה דברים יפים! 🌟',
+  'אתם הילדים הכי מיוחדים! יום נפלא מחכה לנו! 🌈',
+  'וואו, איזה יום מרגש! מוכנים להרפתקה? 🚀',
+  'אתם כוכבים זוהרים! בואו נתחיל! ⭐',
+  'שישי שמח! יום של שמחה וחיוכים! 😊',
+  'שבת שלום! יום של מנוחה ומשחקים! 🕊️'
+];
+
+const DAILY_TASKS = [
+  {
+    title: 'בונים מאורה מבשמיכות!',
+    icon: '🏰',
+    instructions: [
+      'קחו שמיכות גדולות מהארון',
+      'שימו כיסאות בשורה',
+      'פרשו את השמיכות מעל הכיסאות',
+      'שימו כריות בפנים - זה הבית שלכם!',
+      'קחו פנס ושחקו בפנים!'
+    ],
+    tip: 'אפשר לקחת צעצועים אהובים למאורה!'
+  },
+  {
+    title: 'משחק הרכבה מקופסאות!',
+    icon: '📦',
+    instructions: [
+      'אספו קופסאות מהמטבח (קופסת חלב, דגנים)',
+      'קחו דבק או סלוטייפ',
+      'נסו לבנות מגדל גבוה!',
+      'או רובוט! או מכונית!',
+      'צבעו את היצירה שלכם'
+    ],
+    tip: 'אפשר להוסיף פקקים ככפתורים!'
+  },
+  {
+    title: 'מסלול מכשולים בסלון!',
+    icon: '🏃',
+    instructions: [
+      'שימו כריות על הרצפה - אלה "אבנים"',
+      'עברו מכרית לכרית בלי לגעת ברצפה!',
+      'שימו שמיכה כמנהרה מתחת לשולחן',
+      'זחלו מתחת לשמיכה',
+      'בסוף - קפצו 3 קפיצות של ניצחון!'
+    ],
+    tip: 'אפשר לעשות את המסלול עם אח/אחות!'
+  },
+  {
+    title: 'בישול ביחד - כדורי שוקולד!',
+    icon: '🍫',
+    instructions: [
+      'בקשו מאמא/אבא ביסקוויטים ושוקולד',
+      'שברו את הביסקוויטים לפירורים',
+      'הוסיפו שוקולד מומס',
+      'גלגלו כדורים עם הידיים',
+      'שימו בהקפאה וחכו!'
+    ],
+    tip: 'אפשר לגלגל בקוקוס או סוכריות!'
+  },
+  {
+    title: 'חנות בבית!',
+    icon: '🛒',
+    instructions: [
+      'אספו צעצועים ודברים מהבית',
+      'סדרו אותם על שולחן כמו חנות',
+      'הכינו "כסף" מנייר',
+      'אחד מוכר ואחד קונה',
+      'אל תשכחו לומר "תודה" ו"בבקשה"!'
+    ],
+    tip: 'אפשר להכין שלטי מחיר!'
+  },
+  {
+    title: 'יצירה מפלסטלינה!',
+    icon: '🎨',
+    instructions: [
+      'קחו פלסטלינה בצבעים שונים',
+      'נסו לעשות: פרח, חיה, או אוכל',
+      'ערבבו צבעים ליצירת צבע חדש',
+      'הכינו משפחה שלמה מפלסטלינה',
+      'ספרו סיפור על המשפחה!'
+    ],
+    tip: 'אפשר להכין פלסטלינה ביתית מקמח ומלח!'
+  },
+  {
+    title: 'יום מנוחה - מגדל קלפים!',
+    icon: '🃏',
+    instructions: [
+      'קחו קלפים או קופסאות קטנות',
+      'נסו לבנות מגדל - בזהירות!',
+      'כמה קומות הצלחתם?',
+      'אם נפל - לא נורא! מתחילים שוב!',
+      'צלמו את המגדל הכי גבוה שבניתם!'
+    ],
+    tip: 'אפשר גם עם קוביות או ספרים!'
+  }
+];
+
+const DAILY_SONGS = [
+  {
+    title: 'דביבון הולך לגן',
+    lyrics: 'דביבון הולך לגן\nשם יש לו הרבה חן\nמשחק עם כל חברים\nשר שירים ומספרים',
+    youtube: 'https://www.youtube.com/results?search_query=דביבון+הולך+לגן+שיר+ילדים'
+  },
+  {
+    title: 'ראש כתפיים ברכיים',
+    lyrics: 'ראש, כתפיים, ברכיים, אצבעות\nברכיים, אצבעות\nברכיים, אצבעות\nראש, כתפיים, ברכיים, אצבעות\nעיניים, אוזניים, פה!',
+    youtube: 'https://www.youtube.com/results?search_query=ראש+כתפיים+ברכיים+אצבעות+ילדים'
+  },
+  {
+    title: 'אם אתה שמח',
+    lyrics: 'אם אתה שמח ואתה יודע\nתמחא כפיים!\nאם אתה שמח ואתה יודע\nתמחא כפיים!\nאם אתה שמח ואתה יודע\nוגם רוצה להראות\nאם אתה שמח ואתה יודע\nתמחא כפיים!',
+    youtube: 'https://www.youtube.com/results?search_query=אם+אתה+שמח+שיר+ילדים'
+  },
+  {
+    title: 'יונתן הקטן',
+    lyrics: 'יונתן הקטן\nרץ עם הרוח\nיונתן הקטן\nליבו פתוח',
+    youtube: 'https://www.youtube.com/results?search_query=יונתן+הקטן+שיר+ילדים'
+  },
+  {
+    title: 'שיר הגשם',
+    lyrics: 'טיף טיף טיף טוף טוף טוף\nהגשם כבר בחוץ\nטיף טיף טיף טוף טוף טוף\nנרקוד גם בחוץ!',
+    youtube: 'https://www.youtube.com/results?search_query=טיף+טיף+טוף+שיר+גשם+ילדים'
+  },
+  {
+    title: 'שבת שלום',
+    lyrics: 'שבת שלום שבת שלום\nשבת שבת שבת שלום\nהנרות דולקים\nהשולחן ערוך\nשבת שלום!',
+    youtube: 'https://www.youtube.com/results?search_query=שבת+שלום+שיר+ילדים'
+  },
+  {
+    title: 'כולם אוהבים שבת',
+    lyrics: 'כולם אוהבים את השבת\nכולם אוהבים לנוח\nכולם אוהבים את השבת\nיום של אושר ושמחה!',
+    youtube: 'https://www.youtube.com/results?search_query=שירי+שבת+לילדים'
+  }
+];
+
+let currentDay = 0;
+let mediaRecorder = null;
+let audioChunks = [];
+let recordedAudioURL = null;
+let isRecording = false;
+let drawingColor = '#e91e63';
+
+// Highlight today
+function highlightToday() {
+  const today = new Date().getDay();
+  const buttons = document.querySelectorAll('.day-btn');
+  buttons.forEach((btn, i) => {
+    if (i === today) {
+      btn.classList.add('today');
+    }
+  });
+}
+
+function selectDay(dayIndex) {
+  currentDay = dayIndex;
+  document.getElementById('day-title').textContent = DAY_EMOJIS[dayIndex] + ' ' + DAYS[dayIndex];
+  document.getElementById('daily-encouragement').textContent = ENCOURAGEMENTS[dayIndex];
+  document.getElementById('task-preview').textContent = DAILY_TASKS[dayIndex].title;
+  document.getElementById('song-preview').textContent = '🎵 ' + DAILY_SONGS[dayIndex].title;
+
+  document.getElementById('days-page').style.display = 'none';
+  document.getElementById('activities-page').style.display = 'block';
+}
+
+function goBack(target) {
+  if (target === 'days') {
+    document.getElementById('days-page').style.display = 'block';
+    document.getElementById('activities-page').style.display = 'none';
+    document.getElementById('detail-page').style.display = 'none';
+  } else if (target === 'activities') {
+    document.getElementById('activities-page').style.display = 'block';
+    document.getElementById('detail-page').style.display = 'none';
+  }
+}
+
+function openActivity(type) {
+  const detailContent = document.getElementById('detail-content');
+  const backBtn = document.getElementById('detail-back-btn');
+  backBtn.onclick = () => goBack('activities');
+
+  if (type === 'task') {
+    const task = DAILY_TASKS[currentDay];
+    detailContent.innerHTML = `
+      <div class="detail-content">
+        <div class="task-icon">${task.icon}</div>
+        <h2>${task.title}</h2>
+        <div class="instructions">
+          <ul>
+            ${task.instructions.map(i => `<li>${i}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="encouragement">💡 טיפ: ${task.tip}</div>
+      </div>
+    `;
+  } else if (type === 'song') {
+    const song = DAILY_SONGS[currentDay];
+    detailContent.innerHTML = `
+      <div class="detail-content">
+        <div class="song-player">
+          <div class="task-icon">🎵</div>
+          <div class="song-title">${song.title}</div>
+          <div class="song-lyrics">${song.lyrics}</div>
+          <a href="${song.youtube}" target="_blank" class="youtube-link">
+            ▶️ שמעו את השיר
+          </a>
+        </div>
+      </div>
+    `;
+  } else if (type === 'contact') {
+    detailContent.innerHTML = `
+      <div class="detail-content">
+        <div class="task-icon">💌</div>
+        <h2>אני שומר על קשר!</h2>
+        <p style="text-align:center; color:#795548; margin-bottom:15px;">
+          שולחים חיבוק לחברים מהגן 🤗
+        </p>
+        <div class="contact-options">
+          <button class="contact-btn" onclick="openContactOption('record')">
+            <span class="btn-icon">🎤</span>
+            מקליטים הודעה לחברים
+          </button>
+          <button class="contact-btn" onclick="openContactOption('photo')">
+            <span class="btn-icon">📸</span>
+            שולחים תמונה שלי
+          </button>
+          <button class="contact-btn" onclick="openContactOption('draw')">
+            <span class="btn-icon">🎨</span>
+            שולחים ציור שציירתי
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('activities-page').style.display = 'none';
+  document.getElementById('detail-page').style.display = 'block';
+}
+
+function openContactOption(option) {
+  const detailContent = document.getElementById('detail-content');
+
+  if (option === 'record') {
+    detailContent.innerHTML = `
+      <div class="detail-content">
+        <div class="task-icon">🎤</div>
+        <h2>מקליטים הודעה לחברים!</h2>
+        <div class="record-area">
+          <p style="color:#795548; margin-bottom:15px;">לחצו על הכפתור האדום והתחילו לדבר!</p>
+          <button class="record-btn" id="recordBtn" onclick="toggleRecording()">🎤</button>
+          <p id="recordStatus" style="color:#e91e63; font-weight:600;"></p>
+          <div id="playbackArea" style="display:none; margin-top:15px;">
+            <p style="color:#4caf50; font-weight:600;">ההקלטה מוכנה! 🎉</p>
+            <button class="play-btn" id="playBtn" onclick="playRecording()">▶️</button>
+            <br>
+            <button class="canvas-action-btn" onclick="downloadRecording()" style="margin-top:10px;">
+              💾 שמור הקלטה
+            </button>
+          </div>
+          <div class="success-msg" id="recordSuccess">ההודעה נשמרה! החברים ישמחו לשמוע! 🎉</div>
+        </div>
+      </div>
+    `;
+  } else if (option === 'photo') {
+    detailContent.innerHTML = `
+      <div class="detail-content">
+        <div class="task-icon">📸</div>
+        <h2>שולחים תמונה!</h2>
+        <div class="upload-area">
+          <div class="upload-box" onclick="document.getElementById('photoInput').click()">
+            <span class="upload-icon">📷</span>
+            <p style="color:#7b1fa2; font-weight:600;">לחצו כאן לצלם או לבחור תמונה!</p>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" onchange="previewPhoto(this)">
+          <img id="photoPreview" class="preview-img" style="display:none;">
+          <div id="photoActions" style="display:none; margin-top:15px;">
+            <button class="canvas-action-btn" onclick="downloadPhoto()">💾 שמור תמונה</button>
+          </div>
+          <div class="success-msg" id="photoSuccess">התמונה נשמרה! איזה יופי! 📸🎉</div>
+        </div>
+      </div>
+    `;
+  } else if (option === 'draw') {
+    detailContent.innerHTML = `
+      <div class="detail-content">
+        <div class="task-icon">🎨</div>
+        <h2>מציירים ציור לחברים!</h2>
+        <div class="drawing-area">
+          <div class="color-palette" id="colorPalette"></div>
+          <div class="canvas-container">
+            <canvas id="drawingCanvas" width="400" height="350"></canvas>
+          </div>
+          <div class="canvas-actions">
+            <button class="canvas-action-btn" onclick="clearCanvas()">🗑️ מחיקה</button>
+            <button class="canvas-action-btn" onclick="downloadDrawing()">💾 שמירה</button>
+          </div>
+          <div class="success-msg" id="drawSuccess">הציור נשמר! איזה אמן/ית! 🎨🎉</div>
+        </div>
+      </div>
+    `;
+    initCanvas();
+  }
+}
+
+// ===== RECORDING =====
+async function toggleRecording() {
+  const btn = document.getElementById('recordBtn');
+  const status = document.getElementById('recordStatus');
+
+  if (!isRecording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+        recordedAudioURL = URL.createObjectURL(blob);
+        document.getElementById('playbackArea').style.display = 'block';
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      btn.classList.add('recording');
+      btn.textContent = '⏹️';
+      status.textContent = 'מקליטים... דברו! 🎙️';
+    } catch (err) {
+      status.textContent = 'צריך לאשר גישה למיקרופון 🎤';
+    }
+  } else {
+    mediaRecorder.stop();
+    isRecording = false;
+    btn.classList.remove('recording');
+    btn.textContent = '🎤';
+    status.textContent = '';
+  }
+}
+
+function playRecording() {
+  if (recordedAudioURL) {
+    const audio = new Audio(recordedAudioURL);
+    audio.play();
+  }
+}
+
+function downloadRecording() {
+  if (recordedAudioURL) {
+    const a = document.createElement('a');
+    a.href = recordedAudioURL;
+    a.download = `הודעה-לחברים-${DAYS[currentDay]}.webm`;
+    a.click();
+    document.getElementById('recordSuccess').style.display = 'block';
+  }
+}
+
+// ===== PHOTO =====
+function previewPhoto(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const preview = document.getElementById('photoPreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      document.getElementById('photoActions').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function downloadPhoto() {
+  const preview = document.getElementById('photoPreview');
+  if (preview.src) {
+    const a = document.createElement('a');
+    a.href = preview.src;
+    a.download = `תמונה-${DAYS[currentDay]}.jpg`;
+    a.click();
+    document.getElementById('photoSuccess').style.display = 'block';
+  }
+}
+
+// ===== DRAWING =====
+function initCanvas() {
+  const colors = ['#e91e63', '#f44336', '#ff9800', '#ffc107', '#4caf50', '#2196f3', '#9c27b0', '#795548', '#000000', '#ffffff'];
+  const palette = document.getElementById('colorPalette');
+
+  colors.forEach(color => {
+    const btn = document.createElement('button');
+    btn.className = 'color-btn' + (color === drawingColor ? ' active' : '');
+    btn.style.background = color;
+    if (color === '#ffffff') {
+      btn.style.border = '3px solid #ccc';
+      btn.title = 'מחק';
+    }
+    btn.onclick = () => {
+      drawingColor = color;
+      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    palette.appendChild(btn);
+  });
+
+  const canvas = document.getElementById('drawingCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Set canvas size
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = 350;
+
+  // Fill white background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  let drawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    const pos = getPos(e);
+    lastX = pos.x;
+    lastY = pos.y;
+  }
+
+  function draw(e) {
+    e.preventDefault();
+    if (!drawing) return;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle = drawingColor;
+    ctx.lineWidth = drawingColor === '#ffffff' ? 20 : 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    lastX = pos.x;
+    lastY = pos.y;
+  }
+
+  function stopDraw() {
+    drawing = false;
+  }
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+  canvas.addEventListener('touchstart', startDraw);
+  canvas.addEventListener('touchmove', draw);
+  canvas.addEventListener('touchend', stopDraw);
+}
+
+function clearCanvas() {
+  const canvas = document.getElementById('drawingCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function downloadDrawing() {
+  const canvas = document.getElementById('drawingCanvas');
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = `ציור-לחברים-${DAYS[currentDay]}.png`;
+  a.click();
+  document.getElementById('drawSuccess').style.display = 'block';
+}
+
+// Init
+highlightToday();
+</script>
+</body>
+</html>
