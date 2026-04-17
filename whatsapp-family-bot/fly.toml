@@ -1,7 +1,7 @@
 # Fly.io app config. Before first deploy, change the `app` name to something unique.
 # Then run: fly launch --copy-config  (or: fly deploy)
 
-app = "whatsapp-family-bot-CHANGEME"
+app = "shamir-family-bot"
 primary_region = "fra"
 
 [build]
