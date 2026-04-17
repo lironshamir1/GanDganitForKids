@@ -133,7 +133,7 @@ async function route(msg: Message): Promise<void> {
   }
 }
 
-client.on('message', (msg) => {
+client.on('message_create', (msg) => {
   route(msg).catch((err) => console.error('route error:', err));
 });
 
