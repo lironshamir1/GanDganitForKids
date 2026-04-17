@@ -70,6 +70,8 @@ async function route(msg: Message): Promise<void> {
   const body = msg.body ?? '';
   const chatId = msg.from;
 
+  console.log(`📨 [${chatId}] body=${JSON.stringify(body)}`);
+
   if (!isAllowedChat(chatId)) return;
 
   const mentionsBot = /@קלוד|@claude/i.test(body);
