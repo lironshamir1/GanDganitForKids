@@ -70,7 +70,14 @@ async function route(msg: Message): Promise<void> {
   const body = msg.body ?? '';
   const chatId = msg.from;
 
-  console.log(`📨 [${chatId}] body=${JSON.stringify(body)}`);
+  try {
+    const chat = await msg.getChat();
+    console.log(
+      `📨 from=${chatId} author=${msg.author ?? '-'} isGroup=${chat.isGroup} name=${JSON.stringify(chat.name)} body=${JSON.stringify(body)}`,
+    );
+  } catch {
+    console.log(`📨 [${chatId}] body=${JSON.stringify(body)}`);
+  }
 
   if (!isAllowedChat(chatId)) return;
 
