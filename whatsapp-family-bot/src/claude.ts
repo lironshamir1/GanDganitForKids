@@ -2,12 +2,8 @@ import OpenAI from 'openai';
 import { config } from './config';
 
 const client = new OpenAI({
-  apiKey: config.openrouterApiKey,
-  baseURL: 'https://openrouter.ai/api/v1',
-  defaultHeaders: {
-    'HTTP-Referer': 'https://github.com/lironshamir1/gandganitforkids',
-    'X-Title': 'WhatsApp Family Bot',
-  },
+  apiKey: config.geminiApiKey,
+  baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
 });
 
 const FAMILY_SYSTEM_PROMPT = `אתה עוזר משפחתי חברותי שמשתתף בקבוצת וואטסאפ משפחתית.
