@@ -7,8 +7,8 @@ const defaultDataDir = path.resolve(__dirname, '..', 'data');
 const defaultAuthDir = path.resolve(__dirname, '..', '.wwebjs_auth');
 
 export const config = {
-  geminiApiKey: process.env.GEMINI_API_KEY ?? '',
-  model: process.env.GEMINI_MODEL ?? 'gemini-2.0-flash',
+  groqApiKey: process.env.GROQ_API_KEY ?? '',
+  model: process.env.GROQ_MODEL ?? 'llama-3.3-70b-versatile',
   familyGroupId: process.env.FAMILY_GROUP_ID ?? '',
   botPrefix: process.env.BOT_PREFIX ?? '!',
   timezone: process.env.TIMEZONE ?? 'Asia/Jerusalem',
@@ -17,8 +17,8 @@ export const config = {
   puppeteerExecutablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
 };
 
-if (!config.geminiApiKey) {
+if (!config.groqApiKey) {
   throw new Error(
-    'GEMINI_API_KEY is required. Get a free key at https://aistudio.google.com/apikey and set it in .env.',
+    'GROQ_API_KEY is required. Get a free key at https://console.groq.com/keys and set it in .env.',
   );
 }

@@ -1,7 +1,10 @@
-import { GoogleGenAI } from '@google/genai';
+import OpenAI from 'openai';
 import { config } from './config';
 
-const client = new GoogleGenAI({ apiKey: config.geminiApiKey });
+const client = new OpenAI({
+  apiKey: config.groqApiKey,
+  baseURL: 'https://api.groq.com/openai/v1',
+});
 
 const FAMILY_SYSTEM_PROMPT = `אתה עוזר משפחתי חברותי שמשתתף בקבוצת וואטסאפ משפחתית.
 - ענה תמיד בעברית, בטון חם, קליל ונעים.
@@ -15,20 +18,20 @@ export async function askClaude(
   systemOverride?: string,
 ): Promise<string> {
   try {
-    const response = await client.models.generateContent({
+    const response = await client.chat.completions.create({
       model: config.model,
-      contents: prompt,
-      config: {
-        systemInstruction: systemOverride ?? FAMILY_SYSTEM_PROMPT,
-        maxOutputTokens: 2048,
-      },
+      max_tokens: 2048,
+      messages: [
+        { role: 'system', content: systemOverride ?? FAMILY_SYSTEM_PROMPT },
+        { role: 'user', content: prompt },
+      ],
     });
 
-    const text = response.text?.trim() ?? '';
+    const text = response.choices[0]?.message?.content?.trim() ?? '';
     return text || 'סליחה, לא הצלחתי לייצר תשובה. נסו שוב.';
   } catch (err: unknown) {
     const e = err as { status?: number; message?: string };
-    console.error(`Gemini error: status=${e.status} msg=${e.message} model=${config.model}`);
+    console.error(`Groq error: status=${e.status} msg=${e.message} model=${config.model}`);
     throw err;
   }
 }
