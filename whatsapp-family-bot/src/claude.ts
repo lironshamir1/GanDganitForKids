@@ -1,10 +1,7 @@
-import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 import { config } from './config';
 
-const client = new OpenAI({
-  apiKey: config.geminiApiKey,
-  baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
-});
+const client = new GoogleGenAI({ apiKey: config.geminiApiKey });
 
 const FAMILY_SYSTEM_PROMPT = `אתה עוזר משפחתי חברותי שמשתתף בקבוצת וואטסאפ משפחתית.
 - ענה תמיד בעברית, בטון חם, קליל ונעים.
@@ -18,20 +15,20 @@ export async function askClaude(
   systemOverride?: string,
 ): Promise<string> {
   try {
-    const response = await client.chat.completions.create({
+    const response = await client.models.generateContent({
       model: config.model,
-      max_tokens: 2048,
-      messages: [
-        { role: 'system', content: systemOverride ?? FAMILY_SYSTEM_PROMPT },
-        { role: 'user', content: prompt },
-      ],
+      contents: prompt,
+      config: {
+        systemInstruction: systemOverride ?? FAMILY_SYSTEM_PROMPT,
+        maxOutputTokens: 2048,
+      },
     });
 
-    const text = response.choices[0]?.message?.content?.trim() ?? '';
+    const text = response.text?.trim() ?? '';
     return text || 'סליחה, לא הצלחתי לייצר תשובה. נסו שוב.';
   } catch (err: unknown) {
-    const e = err as { status?: number; message?: string; error?: unknown };
-    console.error(`Gemini error: status=${e.status} msg=${e.message} err=${JSON.stringify(e.error)} model=${config.model}`);
+    const e = err as { status?: number; message?: string };
+    console.error(`Gemini error: status=${e.status} msg=${e.message} model=${config.model}`);
     throw err;
   }
 }
