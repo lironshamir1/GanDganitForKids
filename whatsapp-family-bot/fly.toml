@@ -17,8 +17,8 @@ primary_region = "fra"
 
 [[vm]]
   cpu_kind = "shared"
-  cpus = 1
-  memory_mb = 1024
+  cpus = 2
+  memory_mb = 2048
 
 [processes]
   app = "node dist/index.js"
