@@ -17,17 +17,23 @@ export async function askClaude(
   prompt: string,
   systemOverride?: string,
 ): Promise<string> {
-  const response = await client.chat.completions.create({
-    model: config.model,
-    max_tokens: 2048,
-    messages: [
-      { role: 'system', content: systemOverride ?? FAMILY_SYSTEM_PROMPT },
-      { role: 'user', content: prompt },
-    ],
-  });
+  try {
+    const response = await client.chat.completions.create({
+      model: config.model,
+      max_tokens: 2048,
+      messages: [
+        { role: 'system', content: systemOverride ?? FAMILY_SYSTEM_PROMPT },
+        { role: 'user', content: prompt },
+      ],
+    });
 
-  const text = response.choices[0]?.message?.content?.trim() ?? '';
-  return text || 'סליחה, לא הצלחתי לייצר תשובה. נסו שוב.';
+    const text = response.choices[0]?.message?.content?.trim() ?? '';
+    return text || 'סליחה, לא הצלחתי לייצר תשובה. נסו שוב.';
+  } catch (err: unknown) {
+    const e = err as { status?: number; message?: string; error?: unknown };
+    console.error(`Gemini error: status=${e.status} msg=${e.message} err=${JSON.stringify(e.error)} model=${config.model}`);
+    throw err;
+  }
 }
 
 export async function summarizeMessages(messages: string[]): Promise<string> {
