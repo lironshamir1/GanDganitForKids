@@ -1,9 +1,16 @@
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { config } from './config';
 
-const client = new Anthropic({ apiKey: config.anthropicApiKey });
+const client = new OpenAI({
+  apiKey: config.openrouterApiKey,
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    'HTTP-Referer': 'https://github.com/lironshamir1/gandganitforkids',
+    'X-Title': 'WhatsApp Family Bot',
+  },
+});
 
-const FAMILY_SYSTEM_PROMPT = `אתה עוזר משפחתי חברותי בשם "קלוד" שמשתתף בקבוצת וואטסאפ משפחתית.
+const FAMILY_SYSTEM_PROMPT = `אתה עוזר משפחתי חברותי שמשתתף בקבוצת וואטסאפ משפחתית.
 - ענה תמיד בעברית, בטון חם, קליל ונעים.
 - תשובות קצרות ומתאימות להודעה בוואטסאפ (פסקה-שתיים לרוב).
 - אל תשתמש ב-Markdown כבד; וואטסאפ תומך ב-*bold*, _italic_, ~strike~.
@@ -14,25 +21,16 @@ export async function askClaude(
   prompt: string,
   systemOverride?: string,
 ): Promise<string> {
-  const stream = client.messages.stream({
+  const response = await client.chat.completions.create({
     model: config.model,
     max_tokens: 2048,
-    system: [
-      {
-        type: 'text',
-        text: systemOverride ?? FAMILY_SYSTEM_PROMPT,
-        cache_control: { type: 'ephemeral' },
-      },
+    messages: [
+      { role: 'system', content: systemOverride ?? FAMILY_SYSTEM_PROMPT },
+      { role: 'user', content: prompt },
     ],
-    messages: [{ role: 'user', content: prompt }],
   });
 
-  const message = await stream.finalMessage();
-  const text = message.content
-    .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-    .map((b) => b.text)
-    .join('\n')
-    .trim();
+  const text = response.choices[0]?.message?.content?.trim() ?? '';
   return text || 'סליחה, לא הצלחתי לייצר תשובה. נסו שוב.';
 }
 

@@ -1,6 +1,6 @@
 # 👨‍👩‍👧‍👦 בוט משפחתי לוואטסאפ
 
-בוט לקבוצת וואטסאפ משפחתית, מבוסס [Claude](https://www.anthropic.com/) (Opus 4.7) + [whatsapp-web.js](https://wwebjs.dev/).
+בוט לקבוצת וואטסאפ משפחתית, מבוסס [OpenRouter](https://openrouter.ai/) (מודלים חינמיים) + [whatsapp-web.js](https://wwebjs.dev/).
 
 ## יכולות
 
@@ -14,7 +14,7 @@
 ### דרישות מוקדמות
 
 - Node.js 18+
-- מפתח API של Anthropic — מ-[console.anthropic.com](https://console.anthropic.com)
+- מפתח API של OpenRouter — **חינמי** מ-[openrouter.ai/keys](https://openrouter.ai/keys) (הרשמה ב-Google, בלי כרטיס אשראי)
 - טלפון עם וואטסאפ
 
 ### התקנה
@@ -23,8 +23,21 @@
 cd whatsapp-family-bot
 npm install
 cp .env.example .env
-# ערכו את .env והוסיפו ANTHROPIC_API_KEY
+# ערכו את .env והוסיפו OPENROUTER_API_KEY
 ```
+
+### החלפת מודל
+
+ברירת המחדל היא `meta-llama/llama-3.3-70b-instruct:free` (חינמי, תומך עברית).
+ניתן להחליף למודל אחר דרך `.env`:
+
+```
+OPENROUTER_MODEL=google/gemini-2.0-flash-exp:free
+# או: deepseek/deepseek-chat-v3.1:free
+# או: mistralai/mistral-small-3.1-24b-instruct:free
+```
+
+רשימת המודלים החינמיים: https://openrouter.ai/models?q=free
 
 ### הרצה
 
@@ -78,7 +91,7 @@ whatsapp-family-bot/
 ├── src/
 │   ├── index.ts          # חיבור לוואטסאפ, ראוטר, crons
 │   ├── config.ts         # טעינת env
-│   ├── claude.ts         # עטיפה ל-Anthropic SDK
+│   ├── claude.ts         # עטיפה ל-OpenRouter (דרך OpenAI SDK)
 │   ├── storage.ts        # JSON persistence
 │   ├── parseTime.ts      # פרסר זמן בעברית
 │   └── commands/
@@ -105,4 +118,6 @@ whatsapp-family-bot/
 
 **הבוט לא מגיב** — בדקו בלוג שההודעה מגיעה, וש-`FAMILY_GROUP_ID` תואם.
 
-**"ANTHROPIC_API_KEY is required"** — העתיקו `.env.example` ל-`.env` והוסיפו מפתח.
+**"OPENROUTER_API_KEY is required"** — העתיקו `.env.example` ל-`.env` והוסיפו מפתח מ-[openrouter.ai/keys](https://openrouter.ai/keys).
+
+**מודל לא נמצא / rate limit** — מודלים חינמיים משתנים. נסו מודל אחר מ-`OPENROUTER_MODEL` או בדקו ב-https://openrouter.ai/models?q=free.
