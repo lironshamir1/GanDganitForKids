@@ -54,16 +54,72 @@ npm start
 
 ההתחברות נשמרת ב-`.wwebjs_auth/` — בפעמים הבאות לא צריך לסרוק שוב.
 
+## דיפלוי ל-Fly.io
+
+הפרויקט מגיע עם `Dockerfile` ו-`fly.toml` מוכנים. עלות משוערת: **~$2-3/חודש** (VM 512MB + 1GB volume).
+
+### דרישות מוקדמות
+
+1. התקן את [flyctl](https://fly.io/docs/hands-on/install-flyctl/):
+   ```bash
+   curl -L https://fly.io/install.sh | sh
+   ```
+2. הירשם ל-Fly.io: `fly auth signup` (דורש כרטיס אשראי, מינימום ~$5/חודש billing).
+
+### שלבי דיפלוי
+
+```bash
+cd whatsapp-family-bot
+
+# 1. ערוך את fly.toml ושנה את "app = whatsapp-family-bot-CHANGEME" לשם ייחודי.
+
+# 2. יצירת האפליקציה (רק בפעם הראשונה)
+fly apps create <your-app-name>
+
+# 3. יצירת volume ל-persistence של סשן וואטסאפ ונתונים (פעם אחת)
+fly volumes create bot_data --region fra --size 1
+
+# 4. הגדרת secrets (במקום .env)
+fly secrets set OPENROUTER_API_KEY="sk-or-v1-..."
+fly secrets set OPENROUTER_MODEL="meta-llama/llama-3.3-70b-instruct:free"
+# אחרי שתקבל את ה-group id:
+# fly secrets set FAMILY_GROUP_ID="..."
+
+# 5. deploy
+fly deploy
+```
+
+### סריקת QR בפעם הראשונה
+
+```bash
+fly logs
+```
+
+ה-QR יודפס בלוגים כ-ASCII. סרוק מהטלפון: **וואטסאפ → מכשירים מקושרים → קישור מכשיר**.
+אחרי סריקה אחת, הסשן נשמר ב-volume ולא צריך לסרוק שוב גם אחרי redeploy.
+
+### פעולות שימושיות
+
+```bash
+fly logs              # צפייה בלוגים בזמן אמת
+fly status            # סטטוס המכונה
+fly ssh console       # SSH לתוך המכונה
+fly deploy            # redeploy אחרי שינוי קוד
+fly secrets list      # רשימת secrets מוגדרים
+```
+
 ### הגבלה לקבוצה ספציפית (מומלץ)
 
 כדי שהבוט יגיב רק בקבוצה המשפחתית:
 
 1. הריצו את הבוט, שלחו הודעה כלשהי בקבוצה.
 2. חפשו בלוג את ה-`from` של ההודעה (משהו כמו `1234567890-987654321@g.us`).
-3. העתיקו ל-`.env`:
-   ```
-   FAMILY_GROUP_ID=1234567890-987654321@g.us
-   ```
+3. הגדירו:
+   - **מקומית:** הוסיפו ל-`.env`:
+     ```
+     FAMILY_GROUP_ID=1234567890-987654321@g.us
+     ```
+   - **Fly.io:** `fly secrets set FAMILY_GROUP_ID="1234567890-987654321@g.us"`
 4. הפעילו מחדש.
 
 ## פקודות

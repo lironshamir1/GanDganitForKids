@@ -10,10 +10,16 @@ import { startRiddle, tryAnswer } from './commands/game';
 import { handleChat } from './commands/chat';
 
 const client = new Client({
-  authStrategy: new LocalAuth({ dataPath: '.wwebjs_auth' }),
+  authStrategy: new LocalAuth({ dataPath: config.wwebjsAuthDir }),
   puppeteer: {
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: config.puppeteerExecutablePath,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+    ],
   },
 });
 
