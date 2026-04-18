@@ -3,10 +3,11 @@ FROM node:20-slim AS builder
 WORKDIR /app
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
-COPY package*.json tsconfig.json ./
+COPY package*.json tsconfig.json vitest.config.ts ./
 RUN npm ci --ignore-scripts
 
 COPY src ./src
+COPY test ./test
 RUN npm run build
 
 FROM node:20-slim
