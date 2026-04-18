@@ -11,6 +11,7 @@ import { handleChat } from './commands/chat';
 import { getWeather } from './commands/weather';
 import { handleShopping } from './commands/shopping';
 import { buildPoll } from './commands/poll';
+import { resolveChatId, stripPrefix, isAllowedChat } from './routing';
 
 const client = new Client({
   authStrategy: new LocalAuth({ dataPath: config.wwebjsAuthDir }),
@@ -53,25 +54,9 @@ client.on('disconnected', (reason) => {
   console.error('🔌 נותקתי:', reason);
 });
 
-function isAllowedChat(chatId: string): boolean {
-  if (!config.familyGroupId) return true;
-  return chatId === config.familyGroupId;
-}
-
-function stripPrefix(body: string): { command: string; args: string } | null {
-  if (!body.startsWith(config.botPrefix)) return null;
-  const rest = body.slice(config.botPrefix.length).trimStart();
-  const spaceIdx = rest.indexOf(' ');
-  if (spaceIdx === -1) return { command: rest, args: '' };
-  return {
-    command: rest.slice(0, spaceIdx),
-    args: rest.slice(spaceIdx + 1),
-  };
-}
-
 async function route(msg: Message): Promise<void> {
   const body = msg.body ?? '';
-  const chatId = msg.fromMe ? msg.to : msg.from;
+  const chatId = resolveChatId(msg);
 
   try {
     const chat = await msg.getChat();
@@ -82,10 +67,10 @@ async function route(msg: Message): Promise<void> {
     console.log(`📨 [${chatId}] body=${JSON.stringify(body)}`);
   }
 
-  if (!isAllowedChat(chatId)) return;
+  if (!isAllowedChat(chatId, config.familyGroupId)) return;
 
   const mentionsBot = /@קלוד|@claude/i.test(body);
-  const parsed = stripPrefix(body);
+  const parsed = stripPrefix(body, config.botPrefix);
 
   if (!parsed && !mentionsBot) {
     if (body.trim()) {
