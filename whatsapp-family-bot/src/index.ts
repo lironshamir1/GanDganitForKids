@@ -71,7 +71,7 @@ function stripPrefix(body: string): { command: string; args: string } | null {
 
 async function route(msg: Message): Promise<void> {
   const body = msg.body ?? '';
-  const chatId = msg.from;
+  const chatId = msg.fromMe ? msg.to : msg.from;
 
   try {
     const chat = await msg.getChat();
