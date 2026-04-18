@@ -8,6 +8,9 @@ import { setReminder, showReminders } from './commands/reminder';
 import { runSummary, runAutoSummary } from './commands/summary';
 import { startRiddle, tryAnswer } from './commands/game';
 import { handleChat } from './commands/chat';
+import { getWeather } from './commands/weather';
+import { handleShopping } from './commands/shopping';
+import { buildPoll } from './commands/poll';
 
 const client = new Client({
   authStrategy: new LocalAuth({ dataPath: config.wwebjsAuthDir }),
@@ -131,6 +134,21 @@ async function route(msg: Message): Promise<void> {
       case 'riddle':
         await msg.reply(await startRiddle(chatId));
         break;
+      case 'מזג':
+      case 'weather':
+        await msg.reply(await getWeather(args));
+        break;
+      case 'קניות':
+      case 'shopping':
+        await msg.reply(handleShopping(chatId, args));
+        break;
+      case 'סקר':
+      case 'poll': {
+        const { poll, error } = buildPoll(args);
+        if (error) await msg.reply(error);
+        else if (poll) await client.sendMessage(chatId, poll);
+        break;
+      }
       default:
         await msg.reply(`🤷 לא מכיר "${command}". שלחו ${config.botPrefix}עזרה`);
     }

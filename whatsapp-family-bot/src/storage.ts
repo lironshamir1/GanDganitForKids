@@ -20,12 +20,13 @@ interface Data {
   reminders: Reminder[];
   dailyMessages: Record<string, string[]>;
   activeRiddles: Record<string, ActiveRiddle>;
+  shoppingLists: Record<string, string[]>;
 }
 
 const DATA_FILE = path.join(config.dataDir, 'store.json');
 
 function emptyData(): Data {
-  return { reminders: [], dailyMessages: {}, activeRiddles: {} };
+  return { reminders: [], dailyMessages: {}, activeRiddles: {}, shoppingLists: {} };
 }
 
 function load(): Data {
@@ -37,6 +38,7 @@ function load(): Data {
       reminders: parsed.reminders ?? [],
       dailyMessages: parsed.dailyMessages ?? {},
       activeRiddles: parsed.activeRiddles ?? {},
+      shoppingLists: parsed.shoppingLists ?? {},
     };
   } catch (err) {
     console.error('Failed to load store, starting fresh:', err);
@@ -102,5 +104,27 @@ export function getActiveRiddle(chatId: string): ActiveRiddle | undefined {
 
 export function clearActiveRiddle(chatId: string): void {
   delete data.activeRiddles[chatId];
+  persist();
+}
+
+export function listShoppingItems(chatId: string): string[] {
+  return data.shoppingLists[chatId] ?? [];
+}
+
+export function addShoppingItem(chatId: string, item: string): void {
+  if (!data.shoppingLists[chatId]) data.shoppingLists[chatId] = [];
+  data.shoppingLists[chatId].push(item);
+  persist();
+}
+
+export function removeShoppingItem(chatId: string, index: number): void {
+  const list = data.shoppingLists[chatId];
+  if (!list) return;
+  list.splice(index, 1);
+  persist();
+}
+
+export function clearShoppingList(chatId: string): void {
+  data.shoppingLists[chatId] = [];
   persist();
 }
